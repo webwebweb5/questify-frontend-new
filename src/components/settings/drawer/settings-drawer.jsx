@@ -182,12 +182,12 @@ export function SettingsDrawer({
           <Box gap={2} display="grid" gridTemplateColumns="repeat(2, 1fr)">
             {!hideColorScheme && renderMode}
             {!hideContrast && renderContrast}
-            {!hideDirection && renderRTL}
+            {/* {!hideDirection && renderRTL} */}
             {!hideCompact && renderCompact}
           </Box>
-          {!(hideNavLayout && hideNavColor) && renderNav}
-          {!hidePresets && renderPresets}
-          {!hideFont && renderFont}
+          {/* {!(hideNavLayout && hideNavColor) && renderNav} */}
+          {/* {!hidePresets && renderPresets} */}
+          {/* {!hideFont && renderFont} */}
         </Stack>
       </Scrollbar>
     </Drawer>
