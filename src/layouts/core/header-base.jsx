@@ -1,7 +1,9 @@
 import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 
 import { Logo } from 'src/components/logo';
+import { Iconify } from 'src/components/iconify';
 
 import { HeaderSection } from './header-section';
 // import { Searchbar } from '../components/searchbar';
@@ -11,6 +13,7 @@ import { AccountDrawer } from '../components/account-drawer';
 import { SettingsButton } from '../components/settings-button';
 // import { LanguagePopover } from '../components/language-popover';
 // import { ContactsPopover } from '../components/contacts-popover';
+
 // import { WorkspacesPopover } from '../components/workspaces-popover';
 import { NotificationsDrawer } from '../components/notifications-drawer';
 
@@ -61,6 +64,7 @@ export function HeaderBase({
     menuButton = true,
     // localization = true,
     notifications = true,
+    backBtn = false,
   } = {},
 
   ...other
@@ -99,6 +103,12 @@ export function HeaderBase({
 
             {/* -- Workspace popover -- */}
             {/* {workspaces && <WorkspacesPopover data-slot="workspaces" data={data?.workspaces} />} */}
+
+            {backBtn && (
+              <Button color="inherit" startIcon={<Iconify icon="carbon:arrow-left" />}>
+                Back
+              </Button>
+            )}
 
             {slots?.leftAreaEnd}
           </>

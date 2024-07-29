@@ -14,7 +14,7 @@ export function LabCreateView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Create a new product"
+        heading="Create a new laboratory"
         links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'New Laboratory' }]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

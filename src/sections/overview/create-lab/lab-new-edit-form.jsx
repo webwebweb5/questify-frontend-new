@@ -72,7 +72,7 @@ export function LabNewEditForm({ currentLab }) {
 
   const renderDetails = (
     <Card>
-      <CardHeader title="Details" subheader="Title, short description, image..." sx={{ mb: 3 }} />
+      <CardHeader title="Details" subheader="Title, description, max score..." sx={{ mb: 3 }} />
 
       <Divider />
 

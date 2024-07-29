@@ -138,6 +138,7 @@ export function DashboardLayout({ sx, children, data }) {
                 },
               },
             }}
+            sx={{ borderBottom: `dashed 1px ${theme.palette.divider}` }}
           />
         }
         /** **************************************
@@ -173,7 +174,7 @@ export function DashboardLayout({ sx, children, data }) {
           '--layout-nav-mini-width': '88px',
           '--layout-nav-vertical-width': '300px',
           '--layout-nav-horizontal-height': '64px',
-          '--layout-dashboard-content-pt': theme.spacing(1),
+          '--layout-dashboard-content-pt': theme.spacing(4),
           '--layout-dashboard-content-pb': theme.spacing(8),
           '--layout-dashboard-content-px': theme.spacing(5),
         }}

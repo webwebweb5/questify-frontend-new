@@ -5,6 +5,7 @@ const ROOTS = {
   DASHBOARD: '/dashboard',
   FORUM: '/forum',
   RECENT_LAB: '/recent-lab',
+  LAB: '/lab',
 };
 
 // ----------------------------------------------------------------------
@@ -29,5 +30,12 @@ export const paths = {
   // FORUM
   forum: {
     root: ROOTS.FORUM,
+  },
+  // LAB
+  lab: {
+    root: ROOTS.LAB,
+    main: (lid) => `${ROOTS.LAB}/${lid}/main`,
+    member: (lid) => `${ROOTS.LAB}/${lid}/member`,
+    grade: (lid) => `${ROOTS.LAB}/${lid}/grade`,
   },
 };
