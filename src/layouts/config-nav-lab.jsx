@@ -4,6 +4,7 @@ import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/config-global';
 
+import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -28,6 +29,11 @@ export const useNavData = () => {
         { title: 'Main', path: paths.lab.main(params.id), icon: ICONS.course },
         { title: 'Member', path: paths.lab.member(params.id), icon: ICONS.user },
         { title: 'Grade', path: paths.lab.grade(params.id), icon: ICONS.label },
+        {
+          title: 'Settings',
+          path: paths.lab.settings(params.id),
+          icon: <Iconify icon="solar:settings-bold-duotone" />,
+        },
       ],
     },
   ];
