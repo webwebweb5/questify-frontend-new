@@ -1,5 +1,7 @@
 'use client';
 
+import { useCallback } from 'react';
+
 import {
   Box,
   Stack,
@@ -16,10 +18,12 @@ import {
 } from '@mui/material';
 
 import { useResponsive } from 'src/hooks/use-responsive';
+import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
 
 import { LabContent } from 'src/layouts/lab';
 
 import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
@@ -38,6 +42,18 @@ const TABLE_HEAD = [
 export function LabMemberView() {
   const mdUp = useResponsive('up', 'md');
 
+  const { copy } = useCopyToClipboard();
+
+  const onCopy = useCallback(
+    (text) => {
+      if (text) {
+        toast.success(`Copied: ${text}`);
+        copy(text);
+      }
+    },
+    [copy]
+  );
+
   return (
     <LabContent maxWidth="xl">
       <Stack spacing={2} sx={{ mb: 6 }}>
@@ -53,7 +69,7 @@ export function LabMemberView() {
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="carbon:copy" />}
-                // onClick={() => onCopy(classroom?.invitationCode)}
+                onClick={() => onCopy('123456')}
                 sx={{ width: 'fit-content' }}
               >
                 123456

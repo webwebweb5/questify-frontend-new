@@ -1,12 +1,16 @@
 'use client';
 
+import { useCallback } from 'react';
+
 import { Card, Stack, Button, Typography } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
 
 import { LabContent } from 'src/layouts/lab';
 
 import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 
 import { SettingsItem } from '../settings-item';
@@ -16,6 +20,18 @@ import { LabDeleteForm } from '../lab-delete-form';
 
 export function LabSettingsView() {
   const deleteForm = useBoolean();
+
+  const { copy } = useCopyToClipboard();
+
+  const onCopy = useCallback(
+    (text) => {
+      if (text) {
+        toast.success(`Copied: ${text}`);
+        copy(text);
+      }
+    },
+    [copy]
+  );
 
   return (
     <>
@@ -37,7 +53,7 @@ export function LabSettingsView() {
                   <Button
                     variant="contained"
                     startIcon={<Iconify icon="carbon:copy" />}
-                    // onClick={() => onCopy(classroom?.invitationCode)}
+                    onClick={() => onCopy('123456')}
                     sx={{ width: 'fit-content', alignSelf: 'center' }}
                   >
                     123456

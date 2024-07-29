@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import { Stack, Avatar, Button, Tooltip, Typography } from '@mui/material';
@@ -5,8 +7,11 @@ import { Stack, Avatar, Button, Tooltip, Typography } from '@mui/material';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
+
 import { varAlpha } from 'src/theme/styles';
 
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { NavSectionVertical } from 'src/components/nav-section';
@@ -15,6 +20,18 @@ import { NavSectionVertical } from 'src/components/nav-section';
 
 export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleNav, ...other }) {
   const theme = useTheme();
+
+  const { copy } = useCopyToClipboard();
+
+  const onCopy = useCallback(
+    (text) => {
+      if (text) {
+        toast.success(`Copied: ${text}`);
+        copy(text);
+      }
+    },
+    [copy]
+  );
 
   const renderNavVertical = (
     <>
@@ -50,7 +67,7 @@ export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleN
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="carbon:copy" />}
-                // onClick={() => onCopy(classroom?.invitationCode)}
+                onClick={() => onCopy('123456')}
                 sx={{ width: 'fit-content' }}
               >
                 123456
