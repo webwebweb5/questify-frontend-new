@@ -26,9 +26,9 @@ export const useNavData = () => {
     {
       subheader: 'Questify',
       items: [
-        { title: 'Main', path: paths.lab.main(params.id), icon: ICONS.course },
-        { title: 'Member', path: paths.lab.member(params.id), icon: ICONS.user },
-        { title: 'Grade', path: paths.lab.grade(params.id), icon: ICONS.label },
+        { title: 'Main', path: paths.lab.main(params.lid), icon: ICONS.course },
+        { title: 'Member', path: paths.lab.member(params.lid), icon: ICONS.user },
+        { title: 'Grade', path: paths.lab.grade(params.lid), icon: ICONS.label },
         {
           title: 'Settings',
           path: paths.lab.settings(params.id),

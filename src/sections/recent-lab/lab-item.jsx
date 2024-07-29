@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 import { Avatar, styled, Typography } from '@mui/material';
 
+import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { Iconify } from 'src/components/iconify';
@@ -79,7 +80,7 @@ export function LabItem() {
     <ListItemText
       sx={{ p: (theme) => theme.spacing(2.5, 2.5, 2, 2.5) }}
       primary={
-        <Link component={RouterLink} href="#" color="inherit">
+        <Link component={RouterLink} href={paths.lab.main(1)} color="inherit">
           UX/UI
         </Link>
       }
