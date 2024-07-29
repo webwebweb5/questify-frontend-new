@@ -1,6 +1,6 @@
 import { CONFIG } from 'src/config-global';
 
-import { LabMainView } from 'src/sections/lab/view';
+import { LabMainView } from 'src/sections/lab/main/view';
 
 // ----------------------------------------------------------------------
 

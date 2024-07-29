@@ -1,16 +1,15 @@
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Button, Typography } from '@mui/material';
+import { Stack, Avatar, Button, Tooltip, Typography } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { varAlpha, hideScrollY } from 'src/theme/styles';
+import { varAlpha } from 'src/theme/styles';
 
-import { Logo } from 'src/components/logo';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-import { NavSectionMini, NavSectionVertical } from 'src/components/nav-section';
+import { NavSectionVertical } from 'src/components/nav-section';
 
 // ----------------------------------------------------------------------
 
@@ -41,33 +40,29 @@ export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleN
             T
           </Avatar>
 
-          <Typography variant="h6" sx={{ mt: 2, ml: 1, mr: 1 }}>
+          <Typography variant="h6" sx={{ my: 2, ml: 1, mr: 1 }}>
             Two Sum
           </Typography>
+
+          <Stack spacing={1}>
+            <Typography variant="body2">Invitation Code: </Typography>
+            <Tooltip title="Click to copy" placement="right" arrow>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="carbon:copy" />}
+                // onClick={() => onCopy(classroom?.invitationCode)}
+                sx={{ width: 'fit-content' }}
+              >
+                123456
+              </Button>
+            </Tooltip>
+          </Stack>
         </Box>
       )}
 
       <Scrollbar fillContent>
         <NavSectionVertical data={data} sx={{ px: 2, pl: 3, flex: '1 1 auto' }} {...other} />
       </Scrollbar>
-    </>
-  );
-
-  const renderNavMini = (
-    <>
-      {slots?.topArea ?? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 2.5 }}>
-          <Logo />
-        </Box>
-      )}
-
-      <NavSectionMini
-        data={data}
-        sx={{ pb: 2, px: 0.5, ...hideScrollY, flex: '1 1 auto', overflowY: 'auto' }}
-        {...other}
-      />
-
-      {slots?.bottomArea}
     </>
   );
 
