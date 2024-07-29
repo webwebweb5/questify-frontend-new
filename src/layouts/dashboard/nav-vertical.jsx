@@ -77,7 +77,7 @@ export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleN
           },
         }}
       /> */}
-      {isNavMini ? renderNavMini : renderNavVertical}
+      {renderNavMini}
     </Box>
   );
 }

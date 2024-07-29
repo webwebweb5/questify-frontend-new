@@ -82,7 +82,7 @@ export function LabLayout({ sx, children, data }) {
         '--layout-nav-mini-width': '88px',
         '--layout-nav-vertical-width': '300px',
         '--layout-nav-horizontal-height': '64px',
-        '--layout-dashboard-content-pt': theme.spacing(1),
+        '--layout-dashboard-content-pt': theme.spacing(3),
         '--layout-dashboard-content-pb': theme.spacing(8),
         '--layout-dashboard-content-px': theme.spacing(5),
       }}
