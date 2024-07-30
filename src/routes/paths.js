@@ -38,5 +38,8 @@ export const paths = {
     member: (lid) => `${ROOTS.LAB}/${lid}/member`,
     grade: (lid) => `${ROOTS.LAB}/${lid}/grade`,
     settings: (lid) => `${ROOTS.LAB}/${lid}/settings`,
+    question: {
+      new: (lid) => `${ROOTS.LAB}/${lid}/question/new`,
+    },
   },
 };

@@ -1,5 +1,8 @@
 import { Box, Stack, Button, Divider, Typography } from '@mui/material';
 
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
 import { maxLine } from 'src/theme/styles';
 
 import { Iconify } from 'src/components/iconify';
@@ -18,7 +21,7 @@ export function LabMainProf({ labQuestions }) {
     <>
       <Stack direction="row" justifyContent="space-between">
         <Stack>
-          <Typography variant="h4"> Two Sum </Typography>
+          <Typography variant="h4"> UX/UI </Typography>
           <Typography variant="body2" sx={{ ...maxLine({ line: 1 }), color: 'text.secondary' }}>
             Duration 15 min(s).
           </Typography>
@@ -54,8 +57,10 @@ export function LabMainProf({ labQuestions }) {
       </Box>
 
       <Button
+        component={RouterLink}
         variant="contained"
         sx={{ py: 1.5, mb: 3 }}
+        href={paths.lab.question.new(1)}
         startIcon={<Iconify icon="mingcute:add-line" />}
         color="info"
       >

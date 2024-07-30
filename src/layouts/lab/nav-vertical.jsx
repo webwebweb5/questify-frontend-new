@@ -49,16 +49,16 @@ export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleN
           </Button>
 
           <Avatar
-            alt="Two Sum"
+            alt="Interface"
             src=""
             variant="rounded"
             sx={{ width: 58, height: 58, mb: 1, mt: 3, ml: 1 }}
           >
-            T
+            U
           </Avatar>
 
           <Typography variant="h6" sx={{ my: 2, ml: 1, mr: 1 }}>
-            Two Sum
+            UX/UI
           </Typography>
 
           <Stack spacing={1}>

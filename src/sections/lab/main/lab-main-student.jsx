@@ -11,7 +11,7 @@ export function LabMainStudent() {
     <>
       <Stack direction="row" justifyContent="space-between">
         <Stack>
-          <Typography variant="h4"> Two Sum </Typography>
+          <Typography variant="h4"> UX/UI </Typography>
           <Typography variant="body2" sx={{ ...maxLine({ line: 1 }), color: 'text.secondary' }}>
             Duration 15 min(s).
           </Typography>
