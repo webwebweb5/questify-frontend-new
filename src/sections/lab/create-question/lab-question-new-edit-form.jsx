@@ -26,6 +26,7 @@ import { Form } from 'src/components/hook-form';
 import { Markdown } from 'src/components/markdown';
 
 import LabQuestionProblemForm from './lab-question-problem-form';
+import LabQuestionTestCaseForm from './lab-question-testcase-form';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +47,7 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
     () => ({
       title: currentLabQuestion?.title || '',
       problemStatement: currentLabQuestion?.problemStatement || '',
+      testCases: [{ input: '', expectedOutput: '' }],
     }),
     [currentLabQuestion]
   );
@@ -143,8 +145,7 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
             </Fade>
             <Fade in={activeStep === 1}>
               <div style={{ display: activeStep === 1 ? 'block' : 'none' }}>
-                {/* <LabTestCaseForm /> */}
-                <div className="">LabTestCaseForm</div>
+                <LabQuestionTestCaseForm />
               </div>
             </Fade>
 
