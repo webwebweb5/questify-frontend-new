@@ -57,9 +57,13 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
 
   const {
     reset,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const title = watch('title', defaultValues.title);
+  const problemStatement = watch('problemStatement', defaultValues.problemStatement);
 
   useEffect(() => {
     if (currentLabQuestion) {
@@ -164,9 +168,11 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
           </Grid>
           <Grid item xs={12} md={5}>
             <Card>
-              <CardHeader title="Type Header" />
+              <CardHeader title="Preview" sx={{ mb: 3 }} />
+              <Divider />
+              <CardHeader title={title || 'Title'} />
               <Stack spacing={3} sx={{ p: 3 }}>
-                <Markdown children="<p>Problem Statement</p>" />
+                <Markdown children={problemStatement || '<p>Problem Statement</p>'} />
               </Stack>
             </Card>
           </Grid>
