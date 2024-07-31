@@ -7,16 +7,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoadingButton } from '@mui/lab';
 import {
   Grid,
-  Card,
   Step,
   Fade,
+  Card,
   Stack,
   Button,
-  Divider,
   Stepper,
+  Divider,
   StepLabel,
-  CardHeader,
   Typography,
+  CardHeader,
 } from '@mui/material';
 
 import { maxLine } from 'src/theme/styles';
@@ -26,11 +26,12 @@ import { Form } from 'src/components/hook-form';
 import { Markdown } from 'src/components/markdown';
 
 import LabQuestionProblemForm from './lab-question-problem-form';
+import LabQuestionSummaryForm from './lab-question-summary-form';
 import LabQuestionTestCaseForm from './lab-question-testcase-form';
 
 // ----------------------------------------------------------------------
 
-const steps = ['Question Info', 'Test Case', 'Run Code', 'Summary'];
+const steps = ['Question Info', 'Test Case', 'Summary'];
 
 export const NewLabQuestionSchema = zod.object({
   title: zod.string().min(3, { message: 'Title is required!' }),
@@ -120,7 +121,11 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
           <Grid item xs={12}>
             <Fade in={activeStep === 2}>
               <div style={{ display: activeStep === 2 ? 'block' : 'none' }}>
-                <div className="">LabSummaryForm</div>
+                <LabQuestionSummaryForm
+                  title={title}
+                  problemStatement={problemStatement}
+                  setActiveStep={setActiveStep}
+                />
               </div>
             </Fade>
 
@@ -135,7 +140,7 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
           </Grid>
         </Grid>
       ) : (
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             {/* Conditional rendering based on activeStep */}
             <Fade in={activeStep === 0}>
@@ -164,10 +169,10 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
               </Button>
             </Stack>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Divider orientation="vertical" sx={{ borderStyle: 'dashed', mx: 2 }} />
-          </Grid>
-          <Grid item xs={12} md={5}>
+          </Grid> */}
+          <Grid item xs={12} md={6}>
             <Card>
               <CardHeader title="Preview" sx={{ mb: 3 }} />
               <Divider />
