@@ -1,10 +1,11 @@
 import { z as zod } from 'zod';
-import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRef, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Editor, loader } from '@monaco-editor/react';
 
 import { LoadingButton } from '@mui/lab';
-import { Stack, Button, Tooltip, MenuItem, IconButton } from '@mui/material';
+import { Stack, Button, Tooltip, MenuItem, IconButton, Typography } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
@@ -18,9 +19,24 @@ const ChangeLanguageSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export default function LabEditor() {
+  const editorRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleEditorDidMount = (editor) => {
+    editorRef.current = editor;
+  };
+
+  const handleEditorChange = (value, event) => {
+    if (value.length > 3000) {
+      setErrorMessage('Code cannot exceed 3000 characters');
+    } else {
+      setErrorMessage('');
+    }
+  };
+
   const defaultValues = useMemo(
     () => ({
-      language: '',
+      language: 'Java' || '',
     }),
     []
   );
@@ -28,6 +44,17 @@ export default function LabEditor() {
   const methods = useForm({
     resolver: zodResolver(ChangeLanguageSchema),
     defaultValues,
+  });
+
+  loader.init().then((monaco) => {
+    monaco.editor.defineTheme('myTheme', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#1B212A',
+      },
+    });
   });
 
   return (
@@ -54,23 +81,29 @@ export default function LabEditor() {
           </IconButton>
         </Tooltip>
       </Stack>
-      {/* <Editor
-                  options={{
-                    minimap: {
-                      enabled: false,
-                    },
-                    lineDecorationsWidth: 0,
-                    lineNumbersMinChars: 3,
-                    wordWrap: 'on',
-                  }}
-                  theme="myTheme"
-                  defaultLanguage={currentLanguage.toLowerCase()}
-                  defaultValue={submissions?.codeSnippets?.Java || ''}
-                  language={currentLanguage.toLowerCase()}
-                  value={submissions?.codeSnippets?.[currentLanguage]}
-                  onMount={handleEditorDidMount}
-                  onChange={handleEditorChange}
-                /> */}
+      <Editor
+        options={{
+          minimap: {
+            enabled: false,
+          },
+          lineDecorationsWidth: 0,
+          lineNumbersMinChars: 3,
+          wordWrap: 'on',
+        }}
+        theme="myTheme"
+        // defaultLanguage={currentLanguage.toLowerCase()}
+        // defaultValue={submissions?.codeSnippets?.Java || ''}
+        // language={currentLanguage.toLowerCase()}
+        // value={submissions?.codeSnippets?.[currentLanguage]}
+        // onMount={handleEditorDidMount}
+        // onChange={handleEditorChange}
+        defaultLanguage="java"
+        defaultValue=""
+        language="java"
+        value=""
+        onMount={handleEditorDidMount}
+        onChange={handleEditorChange}
+      />
       <Stack
         spacing={2}
         direction="row"
@@ -80,11 +113,11 @@ export default function LabEditor() {
           right: 18,
         }}
       >
-        {/* {errorMessage && (
-                    <Typography color="error" variant="caption" sx={{ p: 1 }}>
-                      {errorMessage}
-                    </Typography>
-                  )} */}
+        {errorMessage && (
+          <Typography color="error" variant="caption" sx={{ p: 1 }}>
+            {errorMessage}
+          </Typography>
+        )}
         <LoadingButton variant="outlined" startIcon={<Iconify icon="carbon:play-filled-alt" />}>
           Run
         </LoadingButton>
