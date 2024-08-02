@@ -4,7 +4,7 @@ import { useMemo, useEffect, useCallback } from 'react';
 
 import { useSetState } from 'src/hooks/use-set-state';
 
-import axios, { endpoints } from 'src/utils/axios';
+import axios from 'src/utils/axios';
 
 import { STORAGE_KEY } from './constant';
 import { AuthContext } from '../auth-context';
@@ -25,9 +25,12 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        const res = await axios.get(endpoints.auth.me);
+        // const res = await axios.get(endpoints.auth.me);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/api/v1/auth/profile`);
 
-        const { user } = res.data;
+        const user = res.data.data;
+
+        console.log(user);
 
         setState({ user: { ...user, accessToken }, loading: false });
       } else {
@@ -55,9 +58,10 @@ export function AuthProvider({ children }) {
       user: state.user
         ? {
             ...state.user,
-            role: state.user?.role ?? 'admin',
+            role: state.user?.role === 'StdAcc' ? 'StdAcc' : 'ProfAcc',
           }
         : null,
+
       checkUserSession,
       loading: status === 'loading',
       authenticated: status === 'authenticated',

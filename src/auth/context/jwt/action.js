@@ -28,6 +28,19 @@ export const signInWithPassword = async ({ email, password }) => {
 };
 
 /** **************************************
+ * Sign in
+ *************************************** */
+export const login = async (code) => {
+  console.log(code);
+  const response = await axios.post('http://localhost:3000/api/auth/login', { code });
+  const { accessToken } = response.data;
+
+  // localStorage.setItem(STORAGE_KEY, accessToken);
+  setSession(accessToken);
+  axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+};
+
+/** **************************************
  * Sign up
  *************************************** */
 export const signUp = async ({ email, password, firstName, lastName }) => {

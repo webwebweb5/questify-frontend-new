@@ -6,12 +6,16 @@ import { paths } from 'src/routes/paths';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { DashboardCard } from '../dashboard-card';
 import { DashboardBigCard } from '../dashboard-big-card';
 
 // ----------------------------------------------------------------------
 
 export function OverviewDashboardView() {
+  const { user } = useAuthContext();
+
   return (
     <DashboardContent maxWidth="xl">
       <Typography variant="h3"> Welcome, </Typography>
@@ -25,11 +29,15 @@ export function OverviewDashboardView() {
             // border: (theme) => `solid 2px ${theme.vars.palette.grey['500Channel']}`,
           }}
         >
-          P
+          {user?.displayName?.charAt(0).toUpperCase()}
         </Avatar>
         <ListItemText
-          primary="Phiriyakorn Maneekongrit"
-          secondary="642115031"
+          primary={user?.displayName
+            .toLowerCase()
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')}
+          secondary={user?.userId}
           secondaryTypographyProps={{
             mt: 0.5,
             component: 'span',
@@ -41,18 +49,26 @@ export function OverviewDashboardView() {
 
       <Grid container spacing={3} sx={{ mt: 2 }}>
         <Grid item xs={12} md={6}>
+          {user?.role !== 'ProfAcc' ? (
+            <DashboardCard
+              title="Join Lab!"
+              subtitle="Enter the World of Coding at Questify."
+              icon="solar:play-bold"
+            />
+          ) : (
+            <Link href={paths.dashboard.createLab} underline="none">
+              <DashboardCard
+                title="Create Lab!"
+                subtitle="Create your own world at Questify."
+                icon="solar:add-circle-bold"
+              />
+            </Link>
+          )}
           {/* <DashboardCard
             title="Join Lab!"
             subtitle="Enter the World of Coding at Questify."
             icon="solar:play-bold"
           /> */}
-          <Link href={paths.dashboard.createLab} passHref underline="none">
-            <DashboardCard
-              title="Create Lab!"
-              subtitle="Create your own world at Questify."
-              icon="solar:add-circle-bold"
-            />
-          </Link>
         </Grid>
         <Grid item xs={12} md={6}>
           <DashboardCard

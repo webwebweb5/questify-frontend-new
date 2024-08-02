@@ -5,8 +5,8 @@
   "description": "Questify",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3033",
-    "start": "next start -p 3033",
+    "dev": "next dev -p 3000",
+    "start": "next start -p 3000",
     "build": "next build",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -14,7 +14,7 @@
     "fm:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "rm:all": "rm -rf node_modules .next out dist build",
     "re:build-npm": "npm run rm:all && npm install && npm run build",
-    "start:out": "npx serve@latest out -p 3033"
+    "start:out": "npx serve@latest out -p 3000"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
