@@ -34,5 +34,6 @@ export const endpoints = {
   laboratory: {
     list: '/api/v1/laboratory/',
     details: '/api/v1/laboratory',
+    create: '/api/v1/laboratory/',
   },
 };

@@ -51,15 +51,17 @@ export function LabItem({ lab }) {
         typography: 'subtitle2',
       }}
     >
-      <Iconify
-        width={24}
-        icon="solar:double-alt-arrow-up-bold-duotone"
-        sx={{ flexShrink: 0, color: 'success.main', mr: 0.5 }}
-      />
       {status === 'PUBLISH' ? (
-        <Typography variant="Subtitle1" noWrap>
-          Active
-        </Typography>
+        <>
+          <Iconify
+            width={24}
+            icon="solar:double-alt-arrow-up-bold-duotone"
+            sx={{ flexShrink: 0, color: 'success.main', mr: 0.5 }}
+          />
+          <Typography variant="Subtitle1" noWrap>
+            Active
+          </Typography>
+        </>
       ) : (
         <>
           <StyledDot
@@ -120,7 +122,11 @@ export function LabItem({ lab }) {
           icon: (
             <Iconify icon="solar:user-check-rounded-bold-duotone" sx={{ color: 'warning.main' }} />
           ),
-          label: `${professor.displayName}`,
+          label: `${professor?.displayName
+            .toLowerCase()
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')}`,
         },
         {
           icon: (

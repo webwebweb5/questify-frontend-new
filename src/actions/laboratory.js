@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useMemo } from 'react';
 
-import { fetcher, endpoints } from 'src/utils/axios';
+import axiosInstance, { fetcher, endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -53,3 +53,9 @@ export function useGetLaboratoryById(laboratoryId) {
 }
 
 // ----------------------------------------------------------------------
+
+export async function createLaboratory(laboratoryData) {
+  const res = await axiosInstance.post(`${endpoints.laboratory.create}`, laboratoryData);
+
+  return res.data;
+}

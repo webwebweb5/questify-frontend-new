@@ -10,7 +10,10 @@ import { Button, MenuItem } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { createLaboratory } from 'src/actions/laboratory';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
@@ -18,11 +21,17 @@ import { Form, Field } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export const NewLabSchema = zod.object({
-  title: zod.string().min(3, { message: 'Title is required!' }),
+  title: zod.string().min(2, { message: 'Title is required!' }),
   description: zod.string().min(3, { message: 'Description is required!' }),
-  maxScore: zod.number().min(1, { message: 'Max score is required!' }),
-  status: zod.enum(['ACTIVE', 'INACTIVE']),
-  duration: zod.number().min(1, { message: 'Duration is required!' }),
+  maxScore: zod
+    .number()
+    .min(0, { message: 'Max score is required!' })
+    .max(100, { message: 'Max score cannot exceed 100!' }),
+  status: zod.enum(['PUBLISH', 'DRAFT']),
+  duration: zod
+    .number()
+    .min(1, { message: 'Duration is required!' })
+    .max(30, { message: 'Duration cannot exceed 30!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -35,7 +44,7 @@ export function LabNewEditForm({ currentLab }) {
       title: currentLab?.title || '',
       description: currentLab?.description || '',
       maxScore: currentLab?.maxScore || 0,
-      status: currentLab?.status || 'INACTIVE',
+      status: currentLab?.status || 'DRAFT',
       duration: currentLab?.duration || 0,
     }),
     [currentLab]
@@ -60,11 +69,11 @@ export function LabNewEditForm({ currentLab }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      const response = await createLaboratory(data);
       reset();
-      toast.success(currentLab ? 'Update success!' : 'Create success!');
-      // router.push(paths.recentLab.root);
-      console.info('DATA', data);
+      toast.success(`${response.message}`);
+      router.push(paths.recentLab.root);
     } catch (error) {
       console.error(error);
     }
@@ -90,8 +99,8 @@ export function LabNewEditForm({ currentLab }) {
         />
 
         <Field.Select name="status" label="Status" InputLabelProps={{ shrink: true }}>
-          <MenuItem value="ACTIVE">ACTIVE</MenuItem>
-          <MenuItem value="INACTIVE">INACTIVE</MenuItem>
+          <MenuItem value="PUBLISH">PUBLISH</MenuItem>
+          <MenuItem value="DRAFT">DRAFT</MenuItem>
         </Field.Select>
 
         <Field.Text
