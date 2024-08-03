@@ -30,26 +30,9 @@ const TABLE_HEAD = [
   { id: 'actions', label: '', align: 'right' },
 ];
 
-const users = [
-  {
-    userId: '642115031',
-    firstName_EN: 'PHIRIYAKORN',
-    lastName_EN: 'MANEEKONGRIT',
-    displayName: 'PHIRIYAKORN MANEEKONGRIT',
-    userName: 'phiriyakorn_m',
-    email: 'phiriyakorn_m@cmu.ac.th',
-    organization_name_EN: 'College of Arts, Media and Technology',
-    student: {
-      studentId: '642115031',
-    },
-    professor: null,
-    role: 'StdAcc',
-  },
-];
-
 // ----------------------------------------------------------------------
 
-export default function MemberList() {
+export default function MemberList({ users }) {
   const mdUp = useResponsive('up', 'md');
 
   const popover = usePopover();
@@ -111,7 +94,7 @@ export default function MemberList() {
                             color="text.disabled"
                             sx={{ mt: 0.5, width: 'fit-content' }}
                           >
-                            {user.userId}
+                            {user.studentId}
                           </Typography>
                         </Box>
                       </Stack>

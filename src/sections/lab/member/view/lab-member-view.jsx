@@ -121,23 +121,29 @@ export function LabMemberView() {
                           height: 36,
                         }}
                       >
-                        P
+                        {laboratory?.professor?.displayName?.charAt(0)}
                       </Avatar>
                       <Box sx={{ display: 'flex', flexDirection: 'column', width: 'fit-content' }}>
-                        <Typography sx={{ width: 'fit-content' }}>Pathathai Nalumpoon</Typography>
+                        <Typography sx={{ width: 'fit-content' }}>
+                          {laboratory?.professor?.displayName
+                            .toLowerCase()
+                            .split(' ')
+                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                            .join(' ')}
+                        </Typography>
                         <Typography
                           component="span"
                           variant="caption"
                           color="text.disabled"
                           sx={{ mt: 0.5, width: 'fit-content' }}
                         >
-                          123456789
+                          {laboratory?.professor?.professorId}
                         </Typography>
                       </Box>
                     </Stack>
                   </TableCell>
                   <TableCell align="left" sx={{ borderRadius: 0 }}>
-                    <Typography>pathathai.n@cmu.ac.th</Typography>
+                    <Typography>{laboratory?.professor?.email}</Typography>
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -154,8 +160,8 @@ export function LabMemberView() {
           </Stack>
         </Stack>
 
-        <MemberList />
-        {/* <MemberList users={students} /> */}
+        {/* <MemberList /> */}
+        <MemberList users={laboratory?.students} />
       </Stack>
     </LabContent>
   );
