@@ -30,10 +30,27 @@ export const fetcher = async (args) => {
 
 // ----------------------------------------------------------------------
 
+export const updateLaboratory = async (laboratoryId, data) => {
+  try {
+    const res = await axiosInstance.put(
+      `${endpoints.laboratory.update}?laboratoryId=${laboratoryId}`,
+      data
+    );
+    return res.data;
+  } catch (error) {
+    console.error('Update Laboratory Error:', error);
+    throw error;
+  }
+};
+
+// ----------------------------------------------------------------------
+
 export const endpoints = {
   laboratory: {
     list: '/api/v1/laboratory/',
     details: '/api/v1/laboratory',
     create: '/api/v1/laboratory/',
+    delete: '/api/v1/laboratory',
+    update: '/api/v1/laboratory',
   },
 };

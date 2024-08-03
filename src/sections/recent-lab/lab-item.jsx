@@ -1,3 +1,5 @@
+import { useRouter } from 'next/navigation';
+
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
@@ -11,8 +13,12 @@ import { Avatar, styled, Typography } from '@mui/material';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
+
+import { LabDeleteForm } from '../lab/settings/lab-delete-form';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +38,10 @@ export const StyledDot = styled(Box)(() => ({
 
 export function LabItem({ lab }) {
   const popover = usePopover();
+
+  const router = useRouter();
+
+  const deleteForm = useBoolean();
 
   const { laboratoryId, title, description, professor, status, studentQuantity } = lab;
 
@@ -173,33 +183,21 @@ export function LabItem({ lab }) {
         <MenuList>
           <MenuItem
             onClick={() => {
-              popover.onClose();
-            }}
-          >
-            <Iconify icon="solar:eye-bold" />
-            View
-          </MenuItem>
-
-          <MenuItem
-            onClick={() => {
-              popover.onClose();
+              router.push(paths.editLab(laboratoryId));
             }}
           >
             <Iconify icon="solar:pen-bold" />
             Edit
           </MenuItem>
 
-          <MenuItem
-            onClick={() => {
-              popover.onClose();
-            }}
-            sx={{ color: 'error.main' }}
-          >
+          <MenuItem onClick={deleteForm.onTrue} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete
           </MenuItem>
         </MenuList>
       </CustomPopover>
+
+      <LabDeleteForm open={deleteForm.value} onClose={deleteForm.onFalse} labId={laboratoryId} />
     </>
   );
 }

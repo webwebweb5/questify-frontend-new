@@ -1,6 +1,6 @@
 import { CONFIG } from 'src/config-global';
 
-import { LabCreateView } from 'src/sections/overview/create-lab/view';
+import { LabCreateView } from 'src/sections/overview/lab/view';
 
 // ----------------------------------------------------------------------
 

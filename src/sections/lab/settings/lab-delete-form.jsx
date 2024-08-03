@@ -1,3 +1,6 @@
+import { mutate } from 'swr';
+import { useRouter } from 'next/navigation';
+
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import { DialogContentText } from '@mui/material';
@@ -6,8 +9,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import { paths } from 'src/routes/paths';
+
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { endpoints } from 'src/utils/axios';
+
+import { deleteLaboratory } from 'src/actions/laboratory';
+
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -15,11 +25,16 @@ import { Iconify } from 'src/components/iconify';
 export function LabDeleteForm({ open, onClose, labId }) {
   const loading = useBoolean(false);
 
+  const router = useRouter();
+
   const OnDeleteLaboratory = async () => {
     loading.onTrue();
     try {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.info('Delete Laboratory Successfully!');
+      const response = await deleteLaboratory(labId);
+      toast.success(`${response.message}`);
+      mutate(endpoints.laboratory.list);
+      onClose();
+      router.push(paths.dashboard.root);
     } catch (error) {
       console.error(error);
     }
@@ -32,7 +47,7 @@ export function LabDeleteForm({ open, onClose, labId }) {
 
       <DialogContent dividers style={{ position: 'relative' }}>
         <DialogContentText id="alert-dialog-description">
-          Confirm to Delete Laboratory:
+          Confirm to Delete Laboratory: {labId}
         </DialogContentText>
       </DialogContent>
 

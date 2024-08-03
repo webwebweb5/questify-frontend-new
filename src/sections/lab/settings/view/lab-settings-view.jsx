@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useParams } from 'next/navigation';
 
 import { Card, Stack, Button, Typography } from '@mui/material';
 
@@ -22,6 +23,8 @@ export function LabSettingsView() {
   const deleteForm = useBoolean();
 
   const { copy } = useCopyToClipboard();
+
+  const params = useParams();
 
   const onCopy = useCallback(
     (text) => {
@@ -90,7 +93,7 @@ export function LabSettingsView() {
         </Stack>
       </LabContent>
 
-      <LabDeleteForm open={deleteForm.value} onClose={deleteForm.onFalse} />
+      <LabDeleteForm open={deleteForm.value} onClose={deleteForm.onFalse} labId={params.lid} />
     </>
   );
 }

@@ -18,8 +18,10 @@ export const paths = {
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
-    createLab: `${ROOTS.DASHBOARD}/create-lab`,
   },
+  // CRUD LAB
+  createLab: `/create-lab`,
+  editLab: (lid) => `/edit-lab/${lid}`,
   // RECENT_LAB
   recentLab: {
     root: ROOTS.RECENT_LAB,

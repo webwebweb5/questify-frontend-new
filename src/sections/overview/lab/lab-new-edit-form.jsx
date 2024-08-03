@@ -1,3 +1,4 @@
+import { mutate } from 'swr';
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useMemo, useEffect } from 'react';
@@ -12,6 +13,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { endpoints, updateLaboratory } from 'src/utils/axios';
 
 import { createLaboratory } from 'src/actions/laboratory';
 
@@ -28,10 +31,8 @@ export const NewLabSchema = zod.object({
     .min(0, { message: 'Max score is required!' })
     .max(100, { message: 'Max score cannot exceed 100!' }),
   status: zod.enum(['PUBLISH', 'DRAFT']),
-  duration: zod
-    .number()
-    .min(1, { message: 'Duration is required!' })
-    .max(30, { message: 'Duration cannot exceed 30!' }),
+  duration: zod.number().min(1, { message: 'Duration is required!' }),
+  // .max(30, { message: 'Duration cannot exceed 30!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -69,13 +70,19 @@ export function LabNewEditForm({ currentLab }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      const response = await createLaboratory(data);
+      let response;
+      if (currentLab) {
+        response = await updateLaboratory(currentLab.laboratoryId, data);
+      } else {
+        response = await createLaboratory(data);
+      }
       reset();
       toast.success(`${response.message}`);
+      mutate(endpoints.laboratory.list);
       router.push(paths.recentLab.root);
     } catch (error) {
       console.error(error);
+      toast.error(`${error.message}`);
     }
   });
 

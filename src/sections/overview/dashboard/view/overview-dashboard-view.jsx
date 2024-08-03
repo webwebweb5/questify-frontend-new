@@ -56,7 +56,7 @@ export function OverviewDashboardView() {
               icon="solar:play-bold"
             />
           ) : (
-            <Link href={paths.dashboard.createLab} underline="none">
+            <Link href={paths.createLab} underline="none">
               <DashboardCard
                 title="Create Lab!"
                 subtitle="Create your own world at Questify."

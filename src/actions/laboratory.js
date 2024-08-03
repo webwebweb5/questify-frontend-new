@@ -1,5 +1,5 @@
-import useSWR from 'swr';
 import { useMemo } from 'react';
+import useSWR, { mutate } from 'swr';
 
 import axiosInstance, { fetcher, endpoints } from 'src/utils/axios';
 
@@ -45,7 +45,9 @@ export function useGetLaboratoryById(laboratoryId) {
       laboratoryLoading: isLoading,
       laboratoryError: error,
       laboratoryValidating: isValidating,
+      mutateLaboratory: () => mutate(URL),
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data?.data, error, isLoading, isValidating]
   );
 
@@ -56,6 +58,27 @@ export function useGetLaboratoryById(laboratoryId) {
 
 export async function createLaboratory(laboratoryData) {
   const res = await axiosInstance.post(`${endpoints.laboratory.create}`, laboratoryData);
+
+  return res.data;
+}
+
+// ----------------------------------------------------------------------
+
+export async function deleteLaboratory(laboratoryId) {
+  const res = await axiosInstance.delete(
+    `${endpoints.laboratory.delete}?laboratoryId=${laboratoryId}`
+  );
+
+  return res.data;
+}
+
+// ----------------------------------------------------------------------
+
+export async function updateLaboratory(laboratoryId, laboratoryData) {
+  const res = await axiosInstance.put(
+    `${endpoints.laboratory.update}?laboratoryId=${laboratoryId}`,
+    laboratoryData
+  );
 
   return res.data;
 }

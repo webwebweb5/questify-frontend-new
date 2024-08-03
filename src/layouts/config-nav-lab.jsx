@@ -31,7 +31,7 @@ export const useNavData = () => {
         { title: 'Grade', path: paths.lab.grade(params.lid), icon: ICONS.label },
         {
           title: 'Settings',
-          path: paths.lab.settings(params.id),
+          path: paths.lab.settings(params.lid),
           icon: <Iconify icon="solar:settings-bold-duotone" />,
         },
       ],
