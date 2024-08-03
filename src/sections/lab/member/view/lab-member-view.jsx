@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useParams } from 'next/navigation';
 
 import {
   Box,
@@ -21,6 +22,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
 
 import { LabContent } from 'src/layouts/lab';
+import { useGetLaboratoryById } from 'src/actions/laboratory';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -41,6 +43,10 @@ const TABLE_HEAD = [
 
 export function LabMemberView() {
   const mdUp = useResponsive('up', 'md');
+
+  const params = useParams();
+
+  const { laboratory } = useGetLaboratoryById(params.lid);
 
   const { copy } = useCopyToClipboard();
 
@@ -69,10 +75,10 @@ export function LabMemberView() {
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="carbon:copy" />}
-                onClick={() => onCopy('123456')}
+                onClick={() => onCopy(laboratory?.invitationCode)}
                 sx={{ width: 'fit-content' }}
               >
-                123456
+                {laboratory?.invitationCode}
               </Button>
             </Tooltip>
           </Stack>

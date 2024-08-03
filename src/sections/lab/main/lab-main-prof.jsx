@@ -12,7 +12,9 @@ import { LabQuestionItem } from './lab-question-item';
 
 // ----------------------------------------------------------------------
 
-export function LabMainProf({ labQuestions }) {
+export function LabMainProf({ labQuestions, labInfo }) {
+  const { title, duration } = labInfo;
+
   if (labQuestions?.length === 0) {
     return <EmptyContent filled title="Laboratory not found" sx={{ my: 3, py: 4 }} />;
   }
@@ -21,9 +23,9 @@ export function LabMainProf({ labQuestions }) {
     <>
       <Stack direction="row" justifyContent="space-between">
         <Stack>
-          <Typography variant="h4"> UX/UI </Typography>
+          <Typography variant="h4"> {title} </Typography>
           <Typography variant="body2" sx={{ ...maxLine({ line: 1 }), color: 'text.secondary' }}>
-            Duration 15 min(s).
+            Duration {duration} min(s).
           </Typography>
         </Stack>
         <Button

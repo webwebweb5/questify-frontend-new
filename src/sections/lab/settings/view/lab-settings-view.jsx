@@ -9,6 +9,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
 
 import { LabContent } from 'src/layouts/lab';
+import { useGetLaboratoryById } from 'src/actions/laboratory';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -22,9 +23,11 @@ import { LabDeleteForm } from '../lab-delete-form';
 export function LabSettingsView() {
   const deleteForm = useBoolean();
 
-  const { copy } = useCopyToClipboard();
-
   const params = useParams();
+
+  const { laboratory } = useGetLaboratoryById(params.lid);
+
+  const { copy } = useCopyToClipboard();
 
   const onCopy = useCallback(
     (text) => {
@@ -56,10 +59,10 @@ export function LabSettingsView() {
                   <Button
                     variant="contained"
                     startIcon={<Iconify icon="carbon:copy" />}
-                    onClick={() => onCopy('123456')}
+                    onClick={() => onCopy(laboratory?.invitationCode)}
                     sx={{ width: 'fit-content', alignSelf: 'center' }}
                   >
-                    123456
+                    {laboratory?.invitationCode}
                   </Button>
                 }
               />

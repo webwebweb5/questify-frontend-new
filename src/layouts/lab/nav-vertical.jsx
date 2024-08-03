@@ -18,8 +18,19 @@ import { NavSectionVertical } from 'src/components/nav-section';
 
 // ----------------------------------------------------------------------
 
-export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleNav, ...other }) {
+export function NavVertical({
+  laboratoryData,
+  sx,
+  data,
+  slots,
+  isNavMini,
+  layoutQuery,
+  onToggleNav,
+  ...other
+}) {
   const theme = useTheme();
+
+  const { title, invitationCode } = laboratoryData;
 
   const { copy } = useCopyToClipboard();
 
@@ -54,11 +65,11 @@ export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleN
             variant="rounded"
             sx={{ width: 58, height: 58, mb: 1, mt: 3, ml: 1 }}
           >
-            U
+            {title.charAt(0).toUpperCase()}
           </Avatar>
 
           <Typography variant="h6" sx={{ my: 2, ml: 1, mr: 1 }}>
-            UX/UI
+            {title}
           </Typography>
 
           <Stack spacing={1}>
@@ -67,10 +78,10 @@ export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleN
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="carbon:copy" />}
-                onClick={() => onCopy('123456')}
+                onClick={() => onCopy(invitationCode)}
                 sx={{ width: 'fit-content' }}
               >
-                123456
+                {invitationCode}
               </Button>
             </Tooltip>
           </Stack>

@@ -1,12 +1,15 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useParams } from 'next/navigation';
 
 import { useTheme } from '@mui/material/styles';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
+import Loading from 'src/app/loading';
 import { varAlpha, stylesMode } from 'src/theme/styles';
+import { useGetLaboratoryById } from 'src/actions/laboratory';
 
 import { bulletColor } from 'src/components/nav-section';
 import { useSettingsContext } from 'src/components/settings';
@@ -41,6 +44,12 @@ export function LabLayout({ sx, children, data }) {
 
   const isNavVertical = isNavMini || settings.navLayout === 'vertical';
 
+  const params = useParams();
+
+  const { laboratory, laboratoryLoading } = useGetLaboratoryById(params.lid);
+
+  if (laboratoryLoading) return <Loading />;
+
   return (
     <LayoutSection
       /** **************************************
@@ -53,6 +62,7 @@ export function LabLayout({ sx, children, data }) {
       sidebarSection={
         lgUp ? (
           <NavVertical
+            laboratoryData={laboratory}
             data={navData}
             isNavMini={isNavMini}
             layoutQuery={layoutQuery}
