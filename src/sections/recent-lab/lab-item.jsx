@@ -30,8 +30,10 @@ export const StyledDot = styled(Box)(() => ({
 
 // ----------------------------------------------------------------------
 
-export function LabItem() {
+export function LabItem({ lab }) {
   const popover = usePopover();
+
+  const { laboratoryId, title, description, professor, status, studentQuantity } = lab;
 
   const renderStatus = (
     <Stack
@@ -54,14 +56,21 @@ export function LabItem() {
         icon="solar:double-alt-arrow-up-bold-duotone"
         sx={{ flexShrink: 0, color: 'success.main', mr: 0.5 }}
       />
-      <Typography variant="Subtitle1" noWrap>
-        Active
-      </Typography>
-      {/* InActive */}
-      {/* <StyledDot component="span" sx={{ flexShrink: 0, color: 'text.disabled', mr: 1, ml: 0.5 }} />
-      <Typography variant="Subtitle1" sx={{ color: 'grey.400' }} noWrap>
-        InActive
-      </Typography> */}
+      {status === 'PUBLISH' ? (
+        <Typography variant="Subtitle1" noWrap>
+          Active
+        </Typography>
+      ) : (
+        <>
+          <StyledDot
+            component="span"
+            sx={{ flexShrink: 0, color: 'text.disabled', mr: 1, ml: 0.5 }}
+          />
+          <Typography variant="Subtitle1" sx={{ color: 'grey.400' }} noWrap>
+            InActive
+          </Typography>
+        </>
+      )}
     </Stack>
   );
 
@@ -69,8 +78,8 @@ export function LabItem() {
     <Box gap={0.5} display="flex" sx={{ p: 1 }}>
       <Box flexGrow={1} sx={{ position: 'relative' }}>
         {renderStatus}
-        <Avatar alt="Interface" sx={{ width: 1, height: 164, borderRadius: 1 }}>
-          UX/UI
+        <Avatar alt={title} sx={{ width: 1, height: 164, borderRadius: 1 }}>
+          {title}
         </Avatar>
       </Box>
     </Box>
@@ -80,11 +89,11 @@ export function LabItem() {
     <ListItemText
       sx={{ p: (theme) => theme.spacing(2.5, 2.5, 2, 2.5) }}
       primary={
-        <Link component={RouterLink} href={paths.lab.main(1)} color="inherit">
-          UX/UI
+        <Link component={RouterLink} href={paths.lab.main(laboratoryId)} color="inherit">
+          {title}
         </Link>
       }
-      secondary="Learn about user interface."
+      secondary={description}
       primaryTypographyProps={{
         typography: 'subtitle1',
       }}
@@ -111,7 +120,7 @@ export function LabItem() {
           icon: (
             <Iconify icon="solar:user-check-rounded-bold-duotone" sx={{ color: 'warning.main' }} />
           ),
-          label: 'Sorawee',
+          label: `${professor.displayName}`,
         },
         {
           icon: (
@@ -120,7 +129,7 @@ export function LabItem() {
               sx={{ color: 'primary.main' }}
             />
           ),
-          label: '0 Member',
+          label: `${studentQuantity} Member${studentQuantity > 0 ? 's' : ''}`,
         },
       ].map((item) => (
         <Stack
