@@ -20,6 +20,8 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { AnimateAvatar } from 'src/components/animate';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { UpgradeBlock } from './nav-upgrade';
 import { AccountButton } from './account-button';
 import { SignOutButton } from './sign-out-button';
@@ -27,6 +29,8 @@ import { SignOutButton } from './sign-out-button';
 // ----------------------------------------------------------------------
 
 export function AccountDrawer({ data = [], sx, ...other }) {
+  const { user } = useAuthContext();
+
   const theme = useTheme();
 
   const router = useRouter();
@@ -55,7 +59,7 @@ export function AccountDrawer({ data = [], sx, ...other }) {
     <AnimateAvatar
       width={96}
       slotProps={{
-        avatar: { src: '', alt: 'Phiriyakorn Maneekongrit' },
+        avatar: { src: '', alt: user?.displayName },
         overlay: {
           border: 2,
           spacing: 3,
@@ -63,7 +67,7 @@ export function AccountDrawer({ data = [], sx, ...other }) {
         },
       }}
     >
-      P
+      {user?.displayName?.charAt(0).toUpperCase()}
     </AnimateAvatar>
   );
 
@@ -73,7 +77,11 @@ export function AccountDrawer({ data = [], sx, ...other }) {
         open={open}
         onClick={handleOpenDrawer}
         photoURL=""
-        displayName="Phiriyakorn Maneekongrit"
+        displayName={user?.displayName
+          .toLowerCase()
+          .split(' ')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ')}
         sx={sx}
         {...other}
       />
@@ -97,11 +105,15 @@ export function AccountDrawer({ data = [], sx, ...other }) {
             {renderAvatar}
 
             <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
-              Phiriyakorn Maneekongrit
+              {user?.displayName
+                .toLowerCase()
+                .split(' ')
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ')}
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
-              phiriyakorn_m@cmu.ac.th
+              {user?.email}
             </Typography>
           </Stack>
 

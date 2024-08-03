@@ -22,7 +22,7 @@ export function OverviewDashboardView() {
 
       <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 2 }}>
         <Avatar
-          alt="Phiriyakorn"
+          alt={user?.displayName}
           sx={{
             width: 36,
             height: 36,
@@ -64,11 +64,6 @@ export function OverviewDashboardView() {
               />
             </Link>
           )}
-          {/* <DashboardCard
-            title="Join Lab!"
-            subtitle="Enter the World of Coding at Questify."
-            icon="solar:play-bold"
-          /> */}
         </Grid>
         <Grid item xs={12} md={6}>
           <DashboardCard
