@@ -14,15 +14,21 @@ import {
 
 import { RouterLink } from 'src/routes/components';
 
-import { varAlpha } from 'src/theme/styles';
+import { maxLine, varAlpha } from 'src/theme/styles';
 
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export function LabQuestionItem() {
+const stripHtmlTags = (input) => input.replace(/<\/?[^>]+(>|$)/g, '');
+
+// ----------------------------------------------------------------------
+
+export function LabQuestionItem({ question, index }) {
   const popover = usePopover();
+
+  const { title, problemStatement, laboratory } = question;
 
   return (
     <>
@@ -49,7 +55,7 @@ export function LabQuestionItem() {
             border: (theme) => `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.24)}`,
           }}
         >
-          Version 1
+          Version {index + 1}
         </Box>
 
         <Stack justifyContent="space-between" sx={{ height: '100%' }}>
@@ -57,18 +63,19 @@ export function LabQuestionItem() {
             <ListItemText
               primary={
                 <Link component={RouterLink} href="" color="inherit">
-                  Question 1
+                  {title}
                 </Link>
               }
-              secondary=""
+              secondary={
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.disabled', mt: 1, ...maxLine({ line: 1 }) }}
+                >
+                  {stripHtmlTags(problemStatement)}
+                </Typography>
+              }
               primaryTypographyProps={{
                 typography: 'subtitle1',
-              }}
-              secondaryTypographyProps={{
-                mt: 1,
-                component: 'span',
-                typography: 'caption',
-                color: 'text.disabled',
               }}
             />
 
@@ -77,8 +84,17 @@ export function LabQuestionItem() {
               direction="row"
               sx={{ color: 'primary.main', typography: 'caption' }}
             >
+              <Iconify width={16} icon="mdi:access-time" />
+              <Typography variant="caption">Duration {laboratory?.duration} min</Typography>
+            </Stack>
+
+            <Stack
+              spacing={1}
+              direction="row"
+              sx={{ color: 'primary.main', typography: 'caption' }}
+            >
               <Iconify width={16} icon="mdi:medal-outline" />
-              <Typography variant="caption">Score 10</Typography>
+              <Typography variant="caption">Max Score {laboratory?.maxScore} points</Typography>
             </Stack>
 
             <Stack
@@ -87,7 +103,13 @@ export function LabQuestionItem() {
               sx={{ color: 'primary.main', typography: 'caption' }}
             >
               <Iconify width={16} icon="charm:graduate-cap" />
-              <Typography variant="caption">Pathathai Nalumpoon</Typography>
+              <Typography variant="caption">
+                {laboratory?.professor?.displayName
+                  .toLowerCase()
+                  .split(' ')
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(' ')}
+              </Typography>
             </Stack>
           </Stack>
 

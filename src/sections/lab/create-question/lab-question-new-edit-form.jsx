@@ -1,8 +1,8 @@
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'next/navigation';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useParams, useRouter } from 'next/navigation';
 
 import { LoadingButton } from '@mui/lab';
 import {
@@ -19,7 +19,10 @@ import {
   CardHeader,
 } from '@mui/material';
 
+import { paths } from 'src/routes/paths';
+
 import { maxLine } from 'src/theme/styles';
+import { createQuestion, createTestCase } from 'src/actions/question';
 
 import { toast } from 'src/components/snackbar';
 import { Form } from 'src/components/hook-form';
@@ -36,6 +39,15 @@ const steps = ['Question Info', 'Test Case', 'Summary'];
 export const NewLabQuestionSchema = zod.object({
   title: zod.string().min(3, { message: 'Title is required!' }),
   problemStatement: zod.string().min(3, { message: 'Problem Statement is required!' }),
+  testCases: zod
+    .array(
+      zod.object({
+        input: zod.string().min(1, { message: 'Input is required!' }),
+        expectedOutput: zod.string().min(1, { message: 'Expected output is required!' }),
+      })
+    )
+    .min(1, { message: 'At least one test case is required!' })
+    .max(3, { message: 'You can add a maximum of 3 test cases.' }),
 });
 
 // ----------------------------------------------------------------------
@@ -43,6 +55,7 @@ export const NewLabQuestionSchema = zod.object({
 export default function LabQuestionNewEditForm({ currentLabQuestion }) {
   const params = useParams();
   const [activeStep, setActiveStep] = useState(0);
+  const router = useRouter();
 
   const defaultValues = useMemo(
     () => ({
@@ -76,10 +89,27 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      let response;
+      if (currentLabQuestion) {
+        // const response = await updateLaboratory(params.lid, data);
+        // await deleteAllTestCases(params.lid);
+        // // eslint-disable-next-line no-restricted-syntax
+        // for (const testCase of data.testCases) {
+        //   // eslint-disable-next-line no-await-in-loop
+        //   await createTestCase(params.lid, testCase);
+        // }
+      } else {
+        response = await createQuestion(params.lid, data);
+        // eslint-disable-next-line no-restricted-syntax
+        for (const testCase of data.testCases) {
+          // eslint-disable-next-line no-await-in-loop
+          await createTestCase(response?.data?.questionId, testCase);
+        }
+      }
       reset();
-      toast.success('Lab Question created');
+      toast.success(`${response.message}`);
       console.info('DATA', data);
+      router.push(paths.lab.main(params.lid));
     } catch (error) {
       console.error(error);
     }

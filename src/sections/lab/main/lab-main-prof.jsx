@@ -1,7 +1,11 @@
+import { useParams } from 'next/navigation';
+
 import { Box, Stack, Button, Divider, Typography } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+
+import { useCurrentRole } from 'src/hooks/use-current-role';
 
 import { maxLine } from 'src/theme/styles';
 
@@ -13,6 +17,10 @@ import { LabQuestionItem } from './lab-question-item';
 // ----------------------------------------------------------------------
 
 export function LabMainProf({ labQuestions, labInfo }) {
+  const params = useParams();
+
+  const role = useCurrentRole();
+
   const { title, duration } = labInfo;
 
   if (labQuestions?.length === 0) {
@@ -52,17 +60,16 @@ export function LabMainProf({ labQuestions, labInfo }) {
         }}
         sx={{ my: 5 }}
       >
-        {/* {labQuestions.map((lab, i) => (
-          <LabQuestionItem key={lab.laboratoryId} lab={lab} index={i} />
-        ))} */}
-        <LabQuestionItem />
+        {labQuestions.map((question, i) => (
+          <LabQuestionItem key={question.questionId} question={question} index={i} />
+        ))}
       </Box>
 
       <Button
         component={RouterLink}
         variant="contained"
         sx={{ py: 1.5, mb: 3 }}
-        href={paths.lab.question.new(1)}
+        href={paths.lab.question.new(params.lid)}
         startIcon={<Iconify icon="mingcute:add-line" />}
         color="info"
       >
