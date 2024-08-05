@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 
 import { LoadingButton } from '@mui/lab';
 import {
+  Box,
   Grid,
   Step,
   Fade,
@@ -22,10 +23,17 @@ import {
 import { paths } from 'src/routes/paths';
 
 import { maxLine } from 'src/theme/styles';
-import { createQuestion, createTestCase } from 'src/actions/question';
+import Loading from 'src/app/(root)/loading';
+import {
+  createQuestion,
+  createTestCase,
+  updateQuestion,
+  updateTestCase,
+  useGetALlTestCases,
+} from 'src/actions/question';
 
-import { toast } from 'src/components/snackbar';
 import { Form } from 'src/components/hook-form';
+import { toast } from 'src/components/snackbar';
 import { Markdown } from 'src/components/markdown';
 
 import LabQuestionProblemForm from './lab-question-problem-form';
@@ -42,6 +50,7 @@ export const NewLabQuestionSchema = zod.object({
   testCases: zod
     .array(
       zod.object({
+        id: zod.string().optional(),
         input: zod.string().min(1, { message: 'Input is required!' }),
         expectedOutput: zod.string().min(1, { message: 'Expected output is required!' }),
       })
@@ -57,13 +66,24 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
   const [activeStep, setActiveStep] = useState(0);
   const router = useRouter();
 
+  const { testCases, testCasesLoading, testCasesError } = useGetALlTestCases(
+    currentLabQuestion?.questionId
+  );
+
   const defaultValues = useMemo(
     () => ({
       title: currentLabQuestion?.title || '',
       problemStatement: currentLabQuestion?.problemStatement || '',
-      testCases: [{ input: '', expectedOutput: '' }],
+      testCases:
+        testCases.length > 0
+          ? testCases.map((testCase) => ({
+              id: testCase.testCaseId || '',
+              input: testCase.input || '',
+              expectedOutput: testCase.expectedOutput || '',
+            }))
+          : [{ id: '', input: '', expectedOutput: '' }],
     }),
-    [currentLabQuestion]
+    [currentLabQuestion, testCases]
   );
 
   const methods = useForm({
@@ -88,24 +108,33 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
   }, [currentLabQuestion, defaultValues, reset]);
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log('Form data:', data);
     try {
       let response;
       if (currentLabQuestion) {
-        // const response = await updateLaboratory(params.lid, data);
-        // await deleteAllTestCases(params.lid);
-        // // eslint-disable-next-line no-restricted-syntax
-        // for (const testCase of data.testCases) {
-        //   // eslint-disable-next-line no-await-in-loop
-        //   await createTestCase(params.lid, testCase);
-        // }
+        response = await updateQuestion(currentLabQuestion?.questionId, data);
+
+        const updatePromises = data.testCases.map((testCase) => {
+          if (testCase.id) {
+            return updateTestCase(testCase.id, {
+              input: testCase.input,
+              expectedOutput: testCase.expectedOutput,
+            });
+          }
+          return createTestCase(currentLabQuestion?.questionId, testCase);
+        });
+
+        await Promise.all(updatePromises);
       } else {
         response = await createQuestion(params.lid, data);
-        // eslint-disable-next-line no-restricted-syntax
-        for (const testCase of data.testCases) {
-          // eslint-disable-next-line no-await-in-loop
-          await createTestCase(response?.data?.questionId, testCase);
-        }
+
+        const createPromises = data.testCases.map((testCase) =>
+          createTestCase(response?.data?.questionId, testCase)
+        );
+
+        await Promise.all(createPromises);
       }
+
       reset();
       toast.success(`${response.message}`);
       console.info('DATA', data);
@@ -122,6 +151,9 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
+  if (testCasesLoading) return <Loading />;
+  if (testCasesError) return <Box>Something wrong</Box>;
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -163,8 +195,14 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
               <Button size="large" color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
                 Back
               </Button>
-              <LoadingButton type="submit" variant="contained" size="large" color="primary">
-                Create Lab
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                size="large"
+                color="primary"
+                loading={isSubmitting}
+              >
+                {!currentLabQuestion ? 'Create Question' : 'Save changes'}
               </LoadingButton>
             </Stack>
           </Grid>
@@ -186,7 +224,12 @@ export default function LabQuestionNewEditForm({ currentLabQuestion }) {
 
             <Stack spacing={1} direction="row" sx={{ my: 3 }}>
               {activeStep === 0 ? (
-                <Button variant="contained" size="large" color="error">
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="error"
+                  onClick={() => router.back()}
+                >
                   Cancel
                 </Button>
               ) : (

@@ -1,3 +1,5 @@
+import { useParams, useRouter } from 'next/navigation';
+
 import {
   Box,
   Card,
@@ -12,6 +14,7 @@ import {
   ListItemText,
 } from '@mui/material';
 
+import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { maxLine, varAlpha } from 'src/theme/styles';
@@ -28,7 +31,11 @@ const stripHtmlTags = (input) => input.replace(/<\/?[^>]+(>|$)/g, '');
 export function LabQuestionItem({ question, index }) {
   const popover = usePopover();
 
-  const { title, problemStatement, laboratory } = question;
+  const params = useParams();
+
+  const router = useRouter();
+
+  const { questionId, title, problemStatement, laboratory } = question;
 
   return (
     <>
@@ -136,12 +143,7 @@ export function LabQuestionItem({ question, index }) {
         </Stack>
       </Card>
 
-      <CustomPopover
-        open={popover.open}
-        anchorEl={popover.anchorEl}
-        onClose={popover.onClose}
-        // slotProps={{ arrow: { placement: 'bottom-center' } }}
-      >
+      <CustomPopover open={popover.open} anchorEl={popover.anchorEl} onClose={popover.onClose}>
         <MenuList>
           <MenuItem
             onClick={() => {
@@ -154,7 +156,7 @@ export function LabQuestionItem({ question, index }) {
 
           <MenuItem
             onClick={() => {
-              popover.onClose();
+              router.push(paths.lab.question.edit(params.lid, questionId));
             }}
           >
             <Iconify icon="solar:pen-bold" />
