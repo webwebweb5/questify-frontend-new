@@ -64,6 +64,12 @@ export async function updateQuestion(questionId, questionData) {
   return res.data;
 }
 
+export async function deleteQuestion(questionId) {
+  const res = await axiosInstance.delete(`${endpoints.question.delete}?questionId=${questionId}`);
+
+  return res.data;
+}
+
 // ----------------------------------------------------------------------
 
 export function useGetALlTestCases(questionId) {

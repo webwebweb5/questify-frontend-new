@@ -1,6 +1,8 @@
+import { mutate } from 'swr';
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -17,15 +19,19 @@ import {
   ListItemText,
   DialogContent,
   DialogActions,
+  DialogContentText,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import Loading from 'src/app/loading';
 import { maxLine, varAlpha } from 'src/theme/styles';
-import { useGetALlTestCases } from 'src/actions/question';
+import { deleteQuestion, useGetALlTestCases } from 'src/actions/question';
 
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
@@ -48,9 +54,24 @@ export function LabQuestionItem({ question, index }) {
   const { testCases, testCasesLoading, testCasesError } = useGetALlTestCases(questionId);
 
   const [questionInfoPopupOpen, setQuestionInfoPopupOpen] = useState(false);
+  const [popupDeleteOpen, setPopupDeleteOpen] = useState(false);
+  const loading = useBoolean(false);
 
   if (testCasesLoading) return <Loading />;
   if (testCasesError) return <Box>Something wrong</Box>;
+
+  const OnDeleteLab = async () => {
+    loading.onTrue();
+    try {
+      const response = await deleteQuestion(questionId);
+      toast.success(`${response.message}`);
+      mutate(`/api/v1/question/laboratory?laboratoryId=${params.lid}`);
+      setPopupDeleteOpen(false);
+    } catch (error) {
+      console.error('Failed to delete Laboratory:', error);
+    }
+    loading.onFalse();
+  };
 
   const renderQuestionInfoDialog = (
     <Dialog
@@ -104,6 +125,40 @@ export function LabQuestionItem({ question, index }) {
         >
           Test Lab
         </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
+  const renderDelete = (
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      open={popupDeleteOpen}
+      onClose={() => setPopupDeleteOpen(false)}
+    >
+      <DialogTitle id="crop-dialog-title">Delete Confirmation</DialogTitle>
+      <DialogContent dividers style={{ position: 'relative' }}>
+        <DialogContentText id="alert-dialog-description">
+          Confirm to Delete Laboratory: {title}
+        </DialogContentText>
+      </DialogContent>
+
+      <DialogActions>
+        <Button
+          onClick={() => setPopupDeleteOpen(false)}
+          startIcon={<Iconify icon="eva:close-outline" />}
+        >
+          Cancel
+        </Button>
+        <LoadingButton
+          color="error"
+          variant="contained"
+          onClick={OnDeleteLab}
+          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+          loading={loading.value}
+        >
+          Delete
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );
@@ -243,7 +298,7 @@ export function LabQuestionItem({ question, index }) {
 
           <MenuItem
             onClick={() => {
-              popover.onClose();
+              setPopupDeleteOpen(true);
             }}
             sx={{ color: 'error.main' }}
           >
@@ -254,6 +309,8 @@ export function LabQuestionItem({ question, index }) {
       </CustomPopover>
 
       {renderQuestionInfoDialog}
+
+      {renderDelete}
     </>
   );
 }

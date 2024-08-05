@@ -58,6 +58,7 @@ export const endpoints = {
     create: '/api/v1/question',
     update: '/api/v1/question',
     details: '/api/v1/question',
+    delete: '/api/v1/question',
   },
   testCase: {
     create: '/api/v1/testcase',
