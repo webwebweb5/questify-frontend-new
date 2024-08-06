@@ -65,4 +65,7 @@ export const endpoints = {
     list: '/api/v1/testcase/question',
     update: '/api/v1/testcase',
   },
+  student: {
+    list: '/api/v1/student',
+  },
 };

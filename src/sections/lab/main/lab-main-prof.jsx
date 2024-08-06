@@ -5,8 +5,6 @@ import { Box, Stack, Button, Divider, Typography } from '@mui/material';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { useCurrentRole } from 'src/hooks/use-current-role';
-
 import { maxLine } from 'src/theme/styles';
 
 import { Iconify } from 'src/components/iconify';
@@ -18,8 +16,6 @@ import { LabQuestionItem } from './lab-question-item';
 
 export function LabMainProf({ labQuestions, labInfo }) {
   const params = useParams();
-
-  const role = useCurrentRole();
 
   const { title, duration } = labInfo;
 
@@ -39,11 +35,12 @@ export function LabMainProf({ labQuestions, labInfo }) {
         <Button
           variant="contained"
           color="primary"
+          href={paths.lab.assignQuestions(params.lid)}
           sx={{ height: 'fit-content', px: 2, py: 1 }}
           startIcon={<Iconify icon="ic:outline-assignment" />}
-          disabled
+          disabled={!labQuestions}
         >
-          Assign Labs
+          Assign Questions
         </Button>
       </Stack>
 
