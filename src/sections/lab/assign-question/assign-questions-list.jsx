@@ -12,11 +12,10 @@ import {
   TableContainer,
 } from '@mui/material';
 
-import { useBoolean } from 'src/hooks/use-boolean';
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -31,8 +30,6 @@ const TABLE_HEAD = [
 
 export default function AssignQuestionsList({ students }) {
   const mdUp = useResponsive('up', 'md');
-
-  const loading = useBoolean(false);
 
   return (
     <Box sx={{ maxWidth: 1227.33 }}>
