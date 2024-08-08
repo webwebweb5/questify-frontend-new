@@ -115,6 +115,7 @@ export function LabQuestionItem({ question, index }) {
         <Button
           onClick={() => setQuestionInfoPopupOpen(false)}
           startIcon={<Iconify icon="eva:close-outline" />}
+          sx={{ mr: 2 }}
         >
           Close
         </Button>
@@ -122,6 +123,7 @@ export function LabQuestionItem({ question, index }) {
           color="primary"
           variant="contained"
           startIcon={<Iconify icon="carbon:play-filled-alt" />}
+          href={paths.startLab(questionId)}
         >
           Test Lab
         </Button>

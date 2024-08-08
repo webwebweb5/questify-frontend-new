@@ -1,12 +1,18 @@
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useRef, useMemo, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Editor, loader } from '@monaco-editor/react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { Stack, Button, Tooltip, MenuItem, IconButton, Typography } from '@mui/material';
 
+import { useBoolean } from 'src/hooks/use-boolean';
+
+import { updateSubmission, updateAndExecuteSubmission } from 'src/actions/submission';
+
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 
@@ -18,9 +24,16 @@ const ChangeLanguageSchema = zod.object({
 
 // ----------------------------------------------------------------------
 
-export default function LabEditor() {
+export default function LabEditor({ testCases, setComparedResults, submissions, setCurrentTab }) {
+  const params = useParams();
+
   const editorRef = useRef(null);
+
   const [errorMessage, setErrorMessage] = useState('');
+
+  const loading = useBoolean(false);
+
+  const [currentLanguage, setCurrentLanguage] = useState('Java');
 
   const handleEditorDidMount = (editor) => {
     editorRef.current = editor;
@@ -34,6 +47,96 @@ export default function LabEditor() {
     }
   };
 
+  const handleExecute = async () => {
+    const code = editorRef?.current?.getValue();
+    if (code.length > 3000) {
+      toast.error('Code cannot exceed 3000 characters');
+      return;
+    }
+
+    loading.onTrue();
+
+    try {
+      await updateSubmission(params.id, currentLanguage, code);
+
+      const promises = testCases.map((testCase) =>
+        updateAndExecuteSubmission(params.id, testCase.testCaseId, currentLanguage, code)
+      );
+
+      const responses = await Promise.all(promises);
+
+      const newResults = responses.map((response) => response.data.output.trim());
+
+      const comparisonResults = newResults.map((output, index) => ({
+        testCaseId: testCases[index].testCaseId,
+        input: testCases[index].input,
+        expectedOutput: testCases[index].expectedOutput,
+        actualOutput: output,
+        isEqual: output === testCases[index].expectedOutput,
+      }));
+
+      setComparedResults(comparisonResults);
+
+      const alert = responses[0]?.message || 'Execution completed';
+      toast.success(`${alert}`);
+      setCurrentTab('two');
+    } catch (error) {
+      console.error(error);
+      toast.error(`${error.message}`);
+    } finally {
+      loading.onFalse();
+    }
+  };
+
+  // const handleExecute = async () => {
+  //   const code = editorRef?.current?.getValue();
+  //   if (code.length > 3000) {
+  //     toast.error('Code cannot exceed 3000 characters');
+  //     return;
+  //   }
+
+  //   loading.onTrue();
+  //   setResults([]);
+
+  //   try {
+  //     await updateSubmission(params.lid, currentLanguage, code);
+
+  //     const newResults = [];
+  //     let alert = '';
+  //     // eslint-disable-next-line no-restricted-syntax
+  //     for (const testCase of testCases) {
+  //       // eslint-disable-next-line no-await-in-loop
+  //       const response = await updateAndExecuteSubmission(
+  //         params.lid,
+  //         testCase.testCaseId,
+  //         currentLanguage,
+  //         code
+  //       );
+  //       alert = response.message;
+  //       newResults.push(response.data.output.trim());
+  //     }
+
+  //     setResults(newResults);
+
+  //     const comparisonResults = newResults.map((output, index) => ({
+  //       testCaseId: testCases[index].testCaseId,
+  //       input: testCases[index].input,
+  //       expectedOutput: testCases[index].expectedOutput,
+  //       actualOutput: output,
+  //       isEqual: output === testCases[index].expectedOutput,
+  //     }));
+
+  //     setComparedResults(comparisonResults);
+  //     toast.success(`${alert}`);
+  //     // setCurrentTab('two');
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(`${error.message}`);
+  //   } finally {
+  //     loading.onFalse();
+  //   }
+  // };
+
   const defaultValues = useMemo(
     () => ({
       language: 'Java' || '',
@@ -45,6 +148,23 @@ export default function LabEditor() {
     resolver: zodResolver(ChangeLanguageSchema),
     defaultValues,
   });
+
+  const { reset } = methods;
+
+  const handleLanguageChange = (e) => {
+    setCurrentLanguage(e.target.value);
+  };
+
+  useEffect(() => {
+    if (currentLanguage) {
+      loading.onTrue();
+      reset({
+        language: currentLanguage,
+      });
+      loading.onFalse();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLanguage, params.lid, reset]);
 
   loader.init().then((monaco) => {
     monaco.editor.defineTheme('myTheme', {
@@ -67,7 +187,7 @@ export default function LabEditor() {
       >
         <Form methods={methods}>
           <Stack sx={{ width: 'fit-content', minWidth: 112 }}>
-            <Field.Select name="language">
+            <Field.Select name="language" onChange={handleLanguageChange} disabled={loading.value}>
               <MenuItem value="Java">Java</MenuItem>
               <MenuItem value="JavaScript">JavaScript</MenuItem>
               <MenuItem value="Python">Python</MenuItem>
@@ -91,16 +211,10 @@ export default function LabEditor() {
           wordWrap: 'on',
         }}
         theme="myTheme"
-        // defaultLanguage={currentLanguage.toLowerCase()}
-        // defaultValue={submissions?.codeSnippets?.Java || ''}
-        // language={currentLanguage.toLowerCase()}
-        // value={submissions?.codeSnippets?.[currentLanguage]}
-        // onMount={handleEditorDidMount}
-        // onChange={handleEditorChange}
-        defaultLanguage="java"
-        defaultValue=""
-        language="java"
-        value=""
+        defaultLanguage={currentLanguage.toLowerCase()}
+        defaultValue={submissions?.codeSnippets?.Java || ''}
+        language={currentLanguage.toLowerCase()}
+        value={submissions?.codeSnippets?.[currentLanguage]}
         onMount={handleEditorDidMount}
         onChange={handleEditorChange}
       />
@@ -118,7 +232,12 @@ export default function LabEditor() {
             {errorMessage}
           </Typography>
         )}
-        <LoadingButton variant="outlined" startIcon={<Iconify icon="carbon:play-filled-alt" />}>
+        <LoadingButton
+          variant="outlined"
+          onClick={handleExecute}
+          startIcon={<Iconify icon="carbon:play-filled-alt" />}
+          loading={loading.value}
+        >
           Run
         </LoadingButton>
         <Button variant="contained">Submit</Button>

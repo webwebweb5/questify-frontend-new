@@ -6,6 +6,7 @@ const ROOTS = {
   FORUM: '/forum',
   RECENT_LAB: '/recent-lab',
   LAB: '/lab',
+  START_LAB: '/start-lab',
 };
 
 // ----------------------------------------------------------------------
@@ -43,4 +44,5 @@ export const paths = {
       edit: (lid, qid) => `${ROOTS.LAB}/${lid}/question/edit/${qid}`,
     },
   },
+  startLab: (id) => `${ROOTS.START_LAB}/${id}`,
 };

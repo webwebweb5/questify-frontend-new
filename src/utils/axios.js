@@ -68,4 +68,7 @@ export const endpoints = {
   student: {
     list: '/api/v1/student',
   },
+  submission: {
+    get: '/api/v1/submission',
+  },
 };

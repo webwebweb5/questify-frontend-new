@@ -51,28 +51,9 @@ const CustomTabs = styled(Tabs)(({ theme }) => ({
   '& .MuiTabs-indicator': { display: 'none' },
 }));
 
-const testCases = [
-  {
-    testCaseId: 1,
-    input: '123',
-    expectedOutput: '1',
-  },
-  {
-    testCaseId: 2,
-    input: '456',
-    expectedOutput: '2',
-  },
-  {
-    testCaseId: 3,
-    input: '789',
-    expectedOutput: '3',
-  },
-];
-
 // ----------------------------------------------------------------------
 
-export default function LabTestCase() {
-  const [currentTab, setCurrentTab] = useState('one');
+export default function LabTestCase({ testCases, results, currentTab, setCurrentTab }) {
   const [currentTestCaseTab, setCurrentTestCaseTab] = useState(0);
 
   const handleChangeTab = useCallback(
@@ -130,15 +111,69 @@ export default function LabTestCase() {
             ))}
           </Stack>
         </>
-      ) : currentTab === 'two' ? (
+      ) : currentTab === 'two' && results.length !== 0 ? (
         <Stack sx={{ px: 2, pb: 2 }}>
-          <Typography variant="h4" color="success.main" sx={{ py: 1 }}>
-            Accepted
+          <Typography
+            variant="h4"
+            color={results[currentTestCaseTab].isEqual ? 'success.main' : 'error.main'}
+            sx={{ py: 1 }}
+          >
+            {results[currentTestCaseTab].isEqual ? 'Accepted' : 'Failed'}
           </Typography>
-          <Stack>result</Stack>
+          <Stack>
+            <CustomTabs value={currentTestCaseTab} onChange={handleChangeTestCaseTab}>
+              {results.map((result, index) => (
+                <CustomTab
+                  key={result.testCaseId}
+                  value={index}
+                  label={
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Iconify
+                        icon={result.isEqual ? 'line-md:check-all' : 'line-md:close-small'}
+                        sx={{ color: result.isEqual ? 'primary.main' : 'error.main' }}
+                      />
+                      Case {index + 1}
+                    </Stack>
+                  }
+                />
+              ))}
+            </CustomTabs>
+          </Stack>
+          <Stack>
+            <Box>
+              <Stack spacing={1}>
+                <Typography variant="subtitle2">Input =</Typography>
+                <Box sx={{ p: 2, borderRadius: 1, bgcolor: '#1B212A' }}>
+                  {results[currentTestCaseTab].input}
+                </Box>
+                <Typography variant="subtitle2">Expected Output =</Typography>
+                <Box sx={{ p: 2, borderRadius: 1, bgcolor: '#1B212A' }}>
+                  {results[currentTestCaseTab].expectedOutput}
+                </Box>
+                <Typography variant="subtitle2">Output =</Typography>
+                <Box
+                  sx={{
+                    p: 2,
+                    borderRadius: 1,
+                    bgcolor: '#1B212A',
+                    color: results[currentTestCaseTab].isEqual ? 'success.main' : 'error.main',
+                  }}
+                >
+                  {results[currentTestCaseTab].actualOutput}
+                </Box>
+              </Stack>
+            </Box>
+          </Stack>
         </Stack>
       ) : (
-        <Typography variant="subtitle2">You must run your code first</Typography>
+        <Stack
+          sx={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="subtitle2">You must run your code first</Typography>
+        </Stack>
       )}
     </>
   );
