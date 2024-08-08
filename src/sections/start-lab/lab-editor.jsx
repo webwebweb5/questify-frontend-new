@@ -88,54 +88,23 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
     }
   };
 
-  // const handleExecute = async () => {
-  //   const code = editorRef?.current?.getValue();
-  //   if (code.length > 3000) {
-  //     toast.error('Code cannot exceed 3000 characters');
-  //     return;
-  //   }
-
-  //   loading.onTrue();
-  //   setResults([]);
-
-  //   try {
-  //     await updateSubmission(params.lid, currentLanguage, code);
-
-  //     const newResults = [];
-  //     let alert = '';
-  //     // eslint-disable-next-line no-restricted-syntax
-  //     for (const testCase of testCases) {
-  //       // eslint-disable-next-line no-await-in-loop
-  //       const response = await updateAndExecuteSubmission(
-  //         params.lid,
-  //         testCase.testCaseId,
-  //         currentLanguage,
-  //         code
-  //       );
-  //       alert = response.message;
-  //       newResults.push(response.data.output.trim());
-  //     }
-
-  //     setResults(newResults);
-
-  //     const comparisonResults = newResults.map((output, index) => ({
-  //       testCaseId: testCases[index].testCaseId,
-  //       input: testCases[index].input,
-  //       expectedOutput: testCases[index].expectedOutput,
-  //       actualOutput: output,
-  //       isEqual: output === testCases[index].expectedOutput,
-  //     }));
-
-  //     setComparedResults(comparisonResults);
-  //     toast.success(`${alert}`);
-  //     // setCurrentTab('two');
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error(`${error.message}`);
-  //   } finally {
-  //     loading.onFalse();
-  //   }
-  // };
+  const handleUpdateCode = async () => {
+    const code = editorRef?.current?.getValue();
+    if (code.length > 3000) {
+      toast.error('Code cannot exceed 3000 characters');
+      return;
+    }
+    loading.onTrue();
+    try {
+      const response = await updateSubmission(params.id, currentLanguage, code);
+      toast.success(`${response.message}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(`${error.message}`);
+    } finally {
+      loading.onFalse();
+    }
+  };
 
   const defaultValues = useMemo(
     () => ({
@@ -196,7 +165,7 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
           </Stack>
         </Form>
         <Tooltip title="Save" placement="top" arrow>
-          <IconButton sx={{ height: 'fit-content' }}>
+          <IconButton sx={{ height: 'fit-content' }} onClick={handleUpdateCode}>
             <Iconify icon="fluent:save-sync-20-regular" />
           </IconButton>
         </Tooltip>
