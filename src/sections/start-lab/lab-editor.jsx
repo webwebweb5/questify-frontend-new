@@ -35,6 +35,26 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
 
   const [currentLanguage, setCurrentLanguage] = useState('Java');
 
+  // const [remainingTime, setRemainingTime] = useState(submissions?.remainingTime);
+
+  // useEffect(() => {
+  //   const fetchTime = async () => {
+  //     try {
+  //       const response = await axiosInstance.get(
+  //         `${endpoints.submission.get}?questionId=${params.id}`
+  //       );
+  //       setRemainingTime(response.data.data.remainingTime);
+  //     } catch (error) {
+  //       console.error('Error fetching remaining time:', error);
+  //     }
+  //   };
+
+  //   // Fetch time every second
+  //   const interval = setInterval(fetchTime, 1000);
+
+  //   return () => clearInterval(interval);
+  // }, [params.id]);
+
   const handleEditorDidMount = (editor) => {
     editorRef.current = editor;
   };
@@ -146,6 +166,15 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
     });
   });
 
+  const formatTime = (timeInSeconds) => {
+    const isNegative = timeInSeconds < 0;
+    const absoluteTime = Math.abs(timeInSeconds);
+    const minutes = Math.floor(absoluteTime / 60);
+    const seconds = absoluteTime % 60;
+    const formattedTime = `${isNegative ? '-' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    return formattedTime;
+  };
+
   return (
     <Stack sx={{ height: '100%', position: 'relative' }}>
       <Stack
@@ -164,11 +193,19 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
             </Field.Select>
           </Stack>
         </Form>
-        <Tooltip title="Save" placement="top" arrow>
-          <IconButton sx={{ height: 'fit-content' }} onClick={handleUpdateCode}>
-            <Iconify icon="fluent:save-sync-20-regular" />
-          </IconButton>
-        </Tooltip>
+        <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
+          <Typography
+            variant="caption"
+            sx={{ color: submissions?.remainingTime < 0 ? 'red' : 'inherit' }}
+          >
+            {/* Remaining Time: {formatTime(remainingTime)} */}
+          </Typography>
+          <Tooltip title="Save" placement="top" arrow>
+            <IconButton sx={{ height: 'fit-content' }} onClick={handleUpdateCode}>
+              <Iconify icon="fluent:save-sync-20-regular" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
       </Stack>
       <Editor
         options={{
