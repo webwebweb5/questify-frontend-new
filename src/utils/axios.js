@@ -71,4 +71,5 @@ export const endpoints = {
   submission: {
     get: '/api/v1/submission',
   },
+  logging: '/api/v1/submission/log',
 };

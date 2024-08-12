@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
 import { Box, styled } from '@mui/material';
+
+import axiosInstance, { endpoints } from 'src/utils/axios';
 
 import { varAlpha } from 'src/theme/styles';
 import Loading from 'src/app/(root)/loading';
@@ -33,6 +35,51 @@ export function StartLabView() {
   const [currentTab, setCurrentTab] = useState('one');
 
   const { submissions, testCases, loading, error } = useGetSubmissionsAndTestCases(params.id);
+
+  useEffect(() => {
+    const keyDownHandler = async (e) => {
+      if (e.ctrlKey && e.code === 'KeyC') {
+        await axiosInstance.post(`${endpoints.logging}?submissionId=${submissions?.submissionId}`, {
+          actionName: 'COPY',
+        });
+        console.log('You pressed Ctrl+C (Copy).');
+      } else if (e.ctrlKey && e.code === 'KeyV') {
+        await axiosInstance.post(`${endpoints.logging}?submissionId=${submissions?.submissionId}`, {
+          actionName: 'PASTE',
+        });
+        console.log('You pressed Ctrl+V (Paste).');
+      }
+    };
+
+    document.addEventListener('keydown', keyDownHandler);
+
+    // clean up
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  }, [submissions?.submissionId]);
+
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'hidden') {
+        await axiosInstance.post(`${endpoints.logging}?submissionId=${submissions?.submissionId}`, {
+          actionName: 'SWITCH_TAB',
+        });
+        console.log('User has switched away from the tab.');
+        // You can perform additional actions here, such as pausing videos, stopping timers, etc.
+      } else if (document.visibilityState === 'visible') {
+        console.log('User has returned to the tab.');
+        // Resume any paused actions here.
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [submissions?.submissionId]);
 
   if (loading) return <Loading />;
   if (error) return <Box>Something wrong</Box>;
