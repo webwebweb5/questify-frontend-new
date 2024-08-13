@@ -1,13 +1,15 @@
 import { mutate } from 'swr';
 import { z as zod } from 'zod';
+import dayjs, { duration } from 'dayjs';
 import { useForm } from 'react-hook-form';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import { Button, MenuItem } from '@mui/material';
+import { TimePicker } from '@mui/x-date-pickers';
 import CardHeader from '@mui/material/CardHeader';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -21,6 +23,8 @@ import { createLaboratory } from 'src/actions/laboratory';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 
+dayjs.extend(duration);
+
 // ----------------------------------------------------------------------
 
 export const NewLabSchema = zod.object({
@@ -31,7 +35,7 @@ export const NewLabSchema = zod.object({
     .min(0, { message: 'Max score is required!' })
     .max(100, { message: 'Max score cannot exceed 100!' }),
   status: zod.enum(['PUBLISH', 'DRAFT']),
-  duration: zod.number().min(1, { message: 'Duration is required!' }),
+  durationTime: zod.number().min(1, { message: 'Duration is required!' }),
   // .max(30, { message: 'Duration cannot exceed 30!' }),
 });
 
@@ -40,13 +44,21 @@ export const NewLabSchema = zod.object({
 export function LabNewEditForm({ currentLab }) {
   const router = useRouter();
 
+  // Initialize the timeValue state as a dayjs object with the proper time (in minutes and seconds)
+  const [timeValue, setTimeValue] = useState(() => {
+    const seconds = currentLab ? currentLab.durationTime : 0;
+    return dayjs()
+      .set('minute', Math.floor(seconds / 60))
+      .set('second', seconds % 60);
+  });
+
   const defaultValues = useMemo(
     () => ({
       title: currentLab?.title || '',
       description: currentLab?.description || '',
       maxScore: currentLab?.maxScore || 0,
       status: currentLab?.status || 'DRAFT',
-      duration: currentLab?.duration || 0,
+      durationTime: currentLab ? currentLab.durationTime : 0,
     }),
     [currentLab]
   );
@@ -59,22 +71,33 @@ export function LabNewEditForm({ currentLab }) {
   const {
     reset,
     handleSubmit,
+    setValue,
     formState: { isSubmitting },
   } = methods;
 
   useEffect(() => {
     if (currentLab) {
       reset(defaultValues);
+      const seconds = currentLab.durationTime;
+      setTimeValue(
+        dayjs()
+          .set('minute', Math.floor(seconds / 60))
+          .set('second', seconds % 60)
+      );
     }
   }, [currentLab, defaultValues, reset]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      const durationInSeconds = timeValue.minute() * 60 + timeValue.second();
+
+      const formData = { ...data, durationTime: durationInSeconds };
+
       let response;
       if (currentLab) {
-        response = await updateLaboratory(currentLab.laboratoryId, data);
+        response = await updateLaboratory(currentLab.laboratoryId, formData);
       } else {
-        response = await createLaboratory(data);
+        response = await createLaboratory(formData);
       }
       reset();
       toast.success(`${response.message}`);
@@ -110,12 +133,17 @@ export function LabNewEditForm({ currentLab }) {
           <MenuItem value="DRAFT">DRAFT</MenuItem>
         </Field.Select>
 
-        <Field.Text
-          name="duration"
-          label="Duration (min.)"
-          placeholder="3"
-          type="number"
-          InputLabelProps={{ shrink: true }}
+        <TimePicker
+          ampm={false}
+          label="Duration (min. and sec.)"
+          value={timeValue}
+          views={['minutes', 'seconds']}
+          onChange={(newValue) => {
+            setTimeValue(newValue);
+            const totalSeconds = newValue.minute() * 60 + newValue.second();
+            setValue('durationTime', totalSeconds);
+          }}
+          slotProps={{ textField: { fullWidth: true } }}
         />
       </Stack>
     </Card>
@@ -136,7 +164,6 @@ export function LabNewEditForm({ currentLab }) {
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto', maxWidth: { xs: 720, xl: 880 } }}>
         {renderDetails}
-
         {renderActions}
       </Stack>
     </Form>

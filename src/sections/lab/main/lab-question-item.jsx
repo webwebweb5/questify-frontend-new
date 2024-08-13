@@ -27,6 +27,8 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { fConvertSeconds } from 'src/utils/format-time';
+
 import Loading from 'src/app/loading';
 import { maxLine, varAlpha } from 'src/theme/styles';
 import { deleteQuestion, useGetALlTestCases } from 'src/actions/question';
@@ -227,7 +229,9 @@ export function LabQuestionItem({ question, index }) {
               sx={{ color: 'primary.main', typography: 'caption' }}
             >
               <Iconify width={16} icon="mdi:access-time" />
-              <Typography variant="caption">Duration {laboratory?.duration} min</Typography>
+              <Typography variant="caption">
+                Duration {fConvertSeconds(laboratory?.durationTime)}
+              </Typography>
             </Stack>
 
             <Stack

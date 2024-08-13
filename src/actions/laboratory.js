@@ -5,18 +5,18 @@ import axiosInstance, { fetcher, endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-const swrOptions = {
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
-};
+// const swrOptions = {
+//   revalidateIfStale: false,
+//   revalidateOnFocus: false,
+//   revalidateOnReconnect: false,
+// };
 
 // ----------------------------------------------------------------------
 
 export function useGetLaboratories() {
   const URL = endpoints.laboratory.list;
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, swrOptions);
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 
   const memoizedValue = useMemo(
     () => ({
@@ -37,7 +37,7 @@ export function useGetLaboratories() {
 export function useGetLaboratoryById(laboratoryId) {
   const URL = laboratoryId ? [endpoints.laboratory.details, { params: { laboratoryId } }] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, swrOptions);
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 
   const memoizedValue = useMemo(
     () => ({

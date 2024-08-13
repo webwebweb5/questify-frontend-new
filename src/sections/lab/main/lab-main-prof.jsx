@@ -5,6 +5,8 @@ import { Box, Stack, Button, Divider, Typography } from '@mui/material';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { fConvertSeconds } from 'src/utils/format-time';
+
 import { maxLine } from 'src/theme/styles';
 
 import { Iconify } from 'src/components/iconify';
@@ -17,11 +19,7 @@ import { LabQuestionItem } from './lab-question-item';
 export function LabMainProf({ labQuestions, labInfo }) {
   const params = useParams();
 
-  const { title, duration } = labInfo;
-
-  if (labQuestions?.length === 0) {
-    return <EmptyContent filled title="Laboratory not found" sx={{ my: 3, py: 4 }} />;
-  }
+  const { title, durationTime } = labInfo;
 
   return (
     <>
@@ -29,7 +27,7 @@ export function LabMainProf({ labQuestions, labInfo }) {
         <Stack>
           <Typography variant="h4"> {title} </Typography>
           <Typography variant="body2" sx={{ ...maxLine({ line: 1 }), color: 'text.secondary' }}>
-            Duration {duration} min(s).
+            Duration {fConvertSeconds(durationTime)}.
           </Typography>
         </Stack>
         <Button
@@ -46,21 +44,25 @@ export function LabMainProf({ labQuestions, labInfo }) {
 
       <Divider sx={{ borderStyle: 'dashed', mt: 3 }} />
 
-      <Box
-        gap={3}
-        display="grid"
-        gridTemplateColumns={{
-          xs: 'repeat(1, 1fr)',
-          sm: 'repeat(2, 1fr)',
-          md: 'repeat(3, 1fr)',
-          // lg: 'repeat(4, 1fr)',
-        }}
-        sx={{ my: 5 }}
-      >
-        {labQuestions.map((question, i) => (
-          <LabQuestionItem key={question.questionId} question={question} index={i} />
-        ))}
-      </Box>
+      {labQuestions?.length === 0 ? (
+        <EmptyContent filled title="Laboratory not found" sx={{ my: 3, py: 4 }} />
+      ) : (
+        <Box
+          gap={3}
+          display="grid"
+          gridTemplateColumns={{
+            xs: 'repeat(1, 1fr)',
+            sm: 'repeat(2, 1fr)',
+            md: 'repeat(3, 1fr)',
+            // lg: 'repeat(4, 1fr)',
+          }}
+          sx={{ my: 5 }}
+        >
+          {labQuestions.map((question, i) => (
+            <LabQuestionItem key={question.questionId} question={question} index={i} />
+          ))}
+        </Box>
+      )}
 
       <Button
         component={RouterLink}
