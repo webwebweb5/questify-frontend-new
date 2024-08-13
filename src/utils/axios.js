@@ -72,4 +72,5 @@ export const endpoints = {
     get: '/api/v1/submission',
   },
   logging: '/api/v1/submission/log',
+  join: 'api/v1/laboratory/join',
 };
