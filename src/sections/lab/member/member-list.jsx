@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import {
   Box,
   Stack,
@@ -16,11 +18,15 @@ import {
   TableContainer,
 } from '@mui/material';
 
+import { useBoolean } from 'src/hooks/use-boolean';
 import { useResponsive } from 'src/hooks/use-responsive';
+import { useCurrentRole } from 'src/hooks/use-current-role';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
+
+import { RemoveStudentForm } from './lab-delete-form';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +42,12 @@ export default function MemberList({ users }) {
   const mdUp = useResponsive('up', 'md');
 
   const popover = usePopover();
+
+  const removeForm = useBoolean();
+
+  const role = useCurrentRole();
+
+  const [selectedStudentId, setSelectedStudentId] = useState('');
 
   if (users?.length === 0) {
     return <Box>Student not found</Box>;
@@ -103,15 +115,16 @@ export default function MemberList({ users }) {
                       <Typography>{user.email}</Typography>
                     </TableCell>
                     <TableCell>
-                      {/* {role === 'ProfAcc' && ( */}
-                      <IconButton
-                        onClick={(e) => {
-                          popover.onOpen(e);
-                        }}
-                      >
-                        <Iconify icon="eva:more-vertical-fill" />
-                      </IconButton>
-                      {/* )} */}
+                      {role === 'ProfAcc' && (
+                        <IconButton
+                          onClick={(e) => {
+                            popover.onOpen(e);
+                            setSelectedStudentId(user.studentId);
+                          }}
+                        >
+                          <Iconify icon="eva:more-vertical-fill" />
+                        </IconButton>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -122,22 +135,23 @@ export default function MemberList({ users }) {
 
       <CustomPopover open={popover.open} anchorEl={popover.anchorEl} onClose={popover.onClose}>
         <MenuList>
-          <MenuItem onClick={() => popover.onClose()} sx={{ color: 'primary.main' }}>
+          {/* <MenuItem onClick={() => popover.onClose()} sx={{ color: 'primary.main' }}>
             <Iconify icon="carbon:chart-histogram" />
             Grades
-          </MenuItem>
+          </MenuItem> */}
 
-          <MenuItem
-            onClick={() => {
-              popover.onClose();
-            }}
-            sx={{ color: 'error.main' }}
-          >
+          <MenuItem onClick={removeForm.onTrue} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Remove
           </MenuItem>
         </MenuList>
       </CustomPopover>
+
+      <RemoveStudentForm
+        open={removeForm.value}
+        onClose={removeForm.onFalse}
+        studentId={selectedStudentId}
+      />
     </>
   );
 }

@@ -82,3 +82,12 @@ export async function updateLaboratory(laboratoryId, laboratoryData) {
 
   return res.data;
 }
+
+// ----------------------------------------------------------------------
+
+export const removeStudentFromLaboratory = async (laboratoryId, studentId) => {
+  const res = await axiosInstance.delete(
+    `${endpoints.laboratory.removeStudent}?laboratoryId=${laboratoryId}&studentId=${studentId}`
+  );
+  return res.data;
+};

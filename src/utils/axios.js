@@ -52,6 +52,7 @@ export const endpoints = {
     create: '/api/v1/laboratory/',
     delete: '/api/v1/laboratory',
     update: '/api/v1/laboratory',
+    removeStudent: '/api/v1/laboratory/remove',
   },
   question: {
     list: '/api/v1/question/laboratory',

@@ -33,12 +33,12 @@ export function LabMainProf({ labQuestions, labInfo }) {
         <Button
           variant="contained"
           color="primary"
-          href={paths.lab.assignQuestions(params.lid)}
+          // href={paths.lab.assignQuestions(params.lid)}
           sx={{ height: 'fit-content', px: 2, py: 1 }}
-          startIcon={<Iconify icon="ic:outline-assignment" />}
+          startIcon={<Iconify icon="ic:outline-auto-awesome" />}
           disabled={!labQuestions}
         >
-          Assign Questions
+          Random Assign
         </Button>
       </Stack>
 
