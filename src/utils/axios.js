@@ -53,6 +53,7 @@ export const endpoints = {
     delete: '/api/v1/laboratory',
     update: '/api/v1/laboratory',
     removeStudent: '/api/v1/laboratory/remove',
+    assignQuestion: '/api/v1/laboratory/assign-question',
   },
   question: {
     list: '/api/v1/question/laboratory',
@@ -60,6 +61,7 @@ export const endpoints = {
     update: '/api/v1/question',
     details: '/api/v1/question',
     delete: '/api/v1/question',
+    student: '/api/v1/question/assignment',
   },
   testCase: {
     create: '/api/v1/testcase',
@@ -73,5 +75,8 @@ export const endpoints = {
     get: '/api/v1/submission',
   },
   logging: '/api/v1/submission/log',
-  join: 'api/v1/laboratory/join',
+  join: '/api/v1/laboratory/join',
+  report: {
+    get: '/api/v1/report',
+  },
 };

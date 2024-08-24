@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useCurrentRole } from 'src/hooks/use-current-role';
 
 import { LabContent } from 'src/layouts/lab';
+import Loading from 'src/app/(root)/loading';
 import { useGetQuestionsProf } from 'src/actions/question';
 import { useGetLaboratoryById } from 'src/actions/laboratory';
 
@@ -18,16 +19,26 @@ export function LabMainView() {
 
   const params = useParams();
 
-  const { laboratory } = useGetLaboratoryById(params.lid);
+  const { laboratory, laboratoryLoading } = useGetLaboratoryById(params.lid);
 
-  const { questions } = useGetQuestionsProf(params.lid);
+  const { questions, questionsEmpty, questionsLoading } = useGetQuestionsProf(params.lid);
+
+  if (questionsLoading || laboratoryLoading) return <Loading />;
 
   return (
     <LabContent maxWidth="xl">
       {role === 'ProfAcc' ? (
-        <LabMainProf labInfo={laboratory} labQuestions={questions} />
+        <LabMainProf
+          labInfo={laboratory}
+          labQuestions={questions}
+          questionsEmpty={questionsEmpty}
+        />
       ) : (
-        <LabMainStudent labInfo={laboratory} />
+        <LabMainStudent
+          labInfo={laboratory}
+          labQuestion={questions[0]}
+          questionEmpty={questionsEmpty}
+        />
       )}
     </LabContent>
   );

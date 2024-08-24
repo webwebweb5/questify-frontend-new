@@ -5,6 +5,8 @@ import { Box, Stack, Button, Divider, Typography } from '@mui/material';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import { fConvertSeconds } from 'src/utils/format-time';
 
 import { maxLine } from 'src/theme/styles';
@@ -13,13 +15,16 @@ import { Iconify } from 'src/components/iconify';
 import { EmptyContent } from 'src/components/empty-content';
 
 import { LabQuestionItem } from './lab-question-item';
+import { LabAssignDialog } from './lab-assign-dialog';
 
 // ----------------------------------------------------------------------
 
 export function LabMainProf({ labQuestions, labInfo }) {
   const params = useParams();
 
-  const { title, durationTime } = labInfo;
+  const assignDialog = useBoolean();
+
+  const { laboratoryId, title, durationTime } = labInfo;
 
   return (
     <>
@@ -33,9 +38,9 @@ export function LabMainProf({ labQuestions, labInfo }) {
         <Button
           variant="contained"
           color="primary"
-          // href={paths.lab.assignQuestions(params.lid)}
           sx={{ height: 'fit-content', px: 2, py: 1 }}
           startIcon={<Iconify icon="ic:outline-auto-awesome" />}
+          onClick={assignDialog.onTrue}
           disabled={!labQuestions}
         >
           Random Assign
@@ -74,6 +79,12 @@ export function LabMainProf({ labQuestions, labInfo }) {
       >
         Add New Question
       </Button>
+
+      <LabAssignDialog
+        open={assignDialog.value}
+        onClose={assignDialog.onFalse}
+        laboratoryId={laboratoryId}
+      />
     </>
   );
 }

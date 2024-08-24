@@ -46,6 +46,27 @@ export function useGetQuestionsProf(laboratoryId) {
 
 // ----------------------------------------------------------------------
 
+export function useGetQuestionStudent(laboratoryId) {
+  const URL = laboratoryId ? [endpoints.question.student, { params: { laboratoryId } }] : '';
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      question: data?.data || [],
+      questionLoading: isLoading,
+      questionError: error,
+      questionValidating: isValidating,
+      questionEmpty: !isLoading && !data?.data.length,
+    }),
+    [data?.data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
 export async function createQuestion(laboratoryId, questionData) {
   const res = await axiosInstance.post(
     `${endpoints.question.create}?laboratoryId=${laboratoryId}`,

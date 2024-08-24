@@ -91,3 +91,12 @@ export const removeStudentFromLaboratory = async (laboratoryId, studentId) => {
   );
   return res.data;
 };
+
+// ----------------------------------------------------------------------
+
+export const assignLaboratory = async (laboratoryId) => {
+  const res = await axiosInstance.get(
+    `${endpoints.laboratory.assignQuestion}?laboratoryId=${laboratoryId}`
+  );
+  return res.data;
+};
