@@ -31,29 +31,35 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
 
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [remainingTime, setRemainingTime] = useState(0);
+
   const loading = useBoolean(false);
 
   const [currentLanguage, setCurrentLanguage] = useState('Java');
 
-  // const [remainingTime, setRemainingTime] = useState(submissions?.remainingTime);
+  useEffect(() => {
+    if (submissions && submissions.endTime) {
+      const timeDifference = new Date(submissions.endTime).getTime() - Date.now();
 
-  // useEffect(() => {
-  //   const fetchTime = async () => {
-  //     try {
-  //       const response = await axiosInstance.get(
-  //         `${endpoints.submission.get}?questionId=${params.id}`
-  //       );
-  //       setRemainingTime(response.data.data.remainingTime);
-  //     } catch (error) {
-  //       console.error('Error fetching remaining time:', error);
-  //     }
-  //   };
+      // Convert milliseconds to seconds
+      const secondsLeft = timeDifference / 1000;
 
-  //   // Fetch time every second
-  //   const interval = setInterval(fetchTime, 1000);
+      setRemainingTime(secondsLeft);
+    }
+  }, [submissions]);
 
-  //   return () => clearInterval(interval);
-  // }, [params.id]);
+  useEffect(() => {
+    if (remainingTime > 0) {
+      const interval = setInterval(() => {
+        setRemainingTime((prevTime) => prevTime - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+
+    // Return undefined explicitly when remainingTime is not greater than 0
+    return undefined;
+  }, [remainingTime]);
 
   const handleEditorDidMount = (editor) => {
     editorRef.current = editor;
@@ -85,17 +91,19 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
 
       const responses = await Promise.all(promises);
 
-      const newResults = responses.map((response) => response.data.output.trim());
+      const result = responses.map((response) => response?.data?.testCaseResults);
 
-      const comparisonResults = newResults.map((output, index) => ({
-        testCaseId: testCases[index].testCaseId,
-        input: testCases[index].input,
-        expectedOutput: testCases[index].expectedOutput,
-        actualOutput: output,
-        isEqual: output === testCases[index].expectedOutput,
-      }));
+      // const comparisonResults = newResults.map((output, index) => ({
+      //   testCaseId: testCases[index].testCaseId,
+      //   input: testCases[index].input,
+      //   expectedOutput: testCases[index].expectedOutput,
+      //   actualOutput: output,
+      //   isEqual: output === testCases[index].expectedOutput,
+      // }));
 
-      setComparedResults(comparisonResults);
+      console.log(result[0]);
+
+      setComparedResults(result[0]);
 
       const alert = responses[0]?.message || 'Execution completed';
       toast.success(`${alert}`);
@@ -166,14 +174,26 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
     });
   });
 
-  const formatTime = (timeInSeconds) => {
-    const isNegative = timeInSeconds < 0;
-    const absoluteTime = Math.abs(timeInSeconds);
-    const minutes = Math.floor(absoluteTime / 60);
-    const seconds = absoluteTime % 60;
-    const formattedTime = `${isNegative ? '-' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    return formattedTime;
-  };
+  function formatTimeWithConversion(seconds) {
+    const isNegative = seconds < 0;
+    const flooredSeconds = Math.floor(Math.abs(seconds)); // Floor the absolute seconds to remove decimal
+
+    if (flooredSeconds >= 3600) {
+      const hours = Math.floor(flooredSeconds / 3600);
+      const remainingSecondsAfterHours = flooredSeconds % 3600;
+      const minutes = Math.floor(remainingSecondsAfterHours / 60);
+      const remainingSeconds = remainingSecondsAfterHours % 60;
+      const timeString = `${hours} hr ${minutes} min ${remainingSeconds} sec`;
+
+      return isNegative ? `-${timeString}` : timeString;
+    }
+
+    const minutes = Math.floor(flooredSeconds / 60);
+    const remainingSeconds = flooredSeconds % 60;
+    const timeString = `${minutes} min ${remainingSeconds} sec`;
+
+    return isNegative ? `-${timeString}` : timeString;
+  }
 
   return (
     <Stack sx={{ height: '100%', position: 'relative' }}>
@@ -196,9 +216,9 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
           <Typography
             variant="caption"
-            sx={{ color: submissions?.remainingTime < 0 ? 'red' : 'inherit' }}
+            sx={{ color: remainingTime < 0 ? 'error.main' : 'inherit' }}
           >
-            {/* Remaining Time: {formatTime(remainingTime)} */}
+            Remaining Time: {formatTimeWithConversion(remainingTime)}
           </Typography>
           <Tooltip title="Save" placement="top" arrow>
             <IconButton sx={{ height: 'fit-content' }} onClick={handleUpdateCode}>

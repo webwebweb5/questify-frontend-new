@@ -115,10 +115,10 @@ export default function LabTestCase({ testCases, results, currentTab, setCurrent
         <Stack sx={{ px: 2, pb: 2 }}>
           <Typography
             variant="h4"
-            color={results[currentTestCaseTab].isEqual ? 'success.main' : 'error.main'}
+            color={results[currentTestCaseTab].result === 'PASS' ? 'success.main' : 'error.main'}
             sx={{ py: 1 }}
           >
-            {results[currentTestCaseTab].isEqual ? 'Accepted' : 'Failed'}
+            {results[currentTestCaseTab].result === 'PASS' ? 'Accepted' : 'Failed'}
           </Typography>
           <Stack>
             <CustomTabs value={currentTestCaseTab} onChange={handleChangeTestCaseTab}>
@@ -129,8 +129,10 @@ export default function LabTestCase({ testCases, results, currentTab, setCurrent
                   label={
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Iconify
-                        icon={result.isEqual ? 'line-md:check-all' : 'line-md:close-small'}
-                        sx={{ color: result.isEqual ? 'primary.main' : 'error.main' }}
+                        icon={
+                          result.result === 'PASS' ? 'line-md:check-all' : 'line-md:close-small'
+                        }
+                        sx={{ color: result.result === 'PASS' ? 'primary.main' : 'error.main' }}
                       />
                       Case {index + 1}
                     </Stack>
@@ -144,11 +146,11 @@ export default function LabTestCase({ testCases, results, currentTab, setCurrent
               <Stack spacing={1}>
                 <Typography variant="subtitle2">Input =</Typography>
                 <Box sx={{ p: 2, borderRadius: 1, bgcolor: '#1B212A' }}>
-                  {results[currentTestCaseTab].input}
+                  {results[currentTestCaseTab]?.testCase?.input}
                 </Box>
                 <Typography variant="subtitle2">Expected Output =</Typography>
                 <Box sx={{ p: 2, borderRadius: 1, bgcolor: '#1B212A' }}>
-                  {results[currentTestCaseTab].expectedOutput}
+                  {results[currentTestCaseTab]?.testCase?.expectedOutput}
                 </Box>
                 <Typography variant="subtitle2">Output =</Typography>
                 <Box
@@ -156,10 +158,11 @@ export default function LabTestCase({ testCases, results, currentTab, setCurrent
                     p: 2,
                     borderRadius: 1,
                     bgcolor: '#1B212A',
-                    color: results[currentTestCaseTab].isEqual ? 'success.main' : 'error.main',
+                    color:
+                      results[currentTestCaseTab].result === 'PASS' ? 'success.main' : 'error.main',
                   }}
                 >
-                  {results[currentTestCaseTab].actualOutput}
+                  {results[currentTestCaseTab]?.actualOutput}
                 </Box>
               </Stack>
             </Box>
