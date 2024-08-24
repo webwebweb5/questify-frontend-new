@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { Stack, Typography } from '@mui/material';
 
 import { LabContent } from 'src/layouts/lab';
-import { useGetStudentByLaboratoryId } from 'src/actions/laboratory';
+import { useGetReportsByLaboratoryId } from 'src/actions/report';
 
 import { Label } from 'src/components/label';
 
@@ -16,7 +16,9 @@ import StudentGradeList from '../student-grade-list';
 export function LabGradeView() {
   const params = useParams();
 
-  const { students } = useGetStudentByLaboratoryId(params.lid);
+  // const { students } = useGetStudentByLaboratoryId(params.lid);
+  const { reports, reportsLoading, reportsError } = useGetReportsByLaboratoryId(params.lid);
+  console.log(reports);
 
   return (
     <LabContent maxWidth="xl">
@@ -24,11 +26,11 @@ export function LabGradeView() {
         <Stack direction="row" justifyContent="space-between">
           <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
             <Typography variant="h4">Grading</Typography>
-            <Label>{students?.length}</Label>
+            <Label>{reports?.length}</Label>
           </Stack>
         </Stack>
 
-        <StudentGradeList students={students} />
+        <StudentGradeList reports={reports} />
       </Stack>
     </LabContent>
   );

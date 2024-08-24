@@ -32,13 +32,20 @@ export function useGetSubmissionsAndTestCases(questionId) {
     isLoading: submissionLoading,
     error: submissionError,
     isValidating: submissionValidating,
-  } = useSWR(submissionURL, fetcher);
+  } = useSWR(submissionURL, fetcher, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
   const {
     data: testCaseData,
     isLoading: testCaseLoading,
     error: testCaseError,
     isValidating: testCaseValidating,
-  } = useSWR(testCaseURL, fetcher);
+  } = useSWR(testCaseURL, fetcher, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   const memoizedValue = useMemo(
     () => ({
@@ -68,7 +75,7 @@ export function useGetSubmissionsAndTestCases(questionId) {
 export const updateAndExecuteSubmission = async (questionId, testCaseId, language, code) => {
   // update
   await axiosInstance.put(
-    `/api/v1/submission?questionId=${questionId}&language=${language}`,
+    `/api/v1/submission?questionId=${questionId}&language=${language}&submissionStatus=ACTIVE`,
     code,
     {
       headers: {
@@ -86,13 +93,22 @@ export const updateAndExecuteSubmission = async (questionId, testCaseId, languag
 
 export const updateSubmission = async (questionId, language, code) => {
   const res = await axiosInstance.put(
-    `/api/v1/submission?questionId=${questionId}&language=${language}`,
+    `/api/v1/submission?questionId=${questionId}&language=${language}&submissionStatus=ACTIVE`,
     code,
     {
       headers: {
         'Content-Type': 'text/plain',
       },
     }
+  );
+  return res.data;
+};
+
+// ----------------------------------------------------------------------
+
+export const submitSubmission = async (submissionId) => {
+  const res = await axiosInstance.post(
+    `${endpoints.submission.submit}?submissionId=${submissionId}`
   );
   return res.data;
 };

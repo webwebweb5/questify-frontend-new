@@ -73,10 +73,12 @@ export const endpoints = {
   },
   submission: {
     get: '/api/v1/submission',
+    submit: '/api/v1/submission/submit',
   },
   logging: '/api/v1/submission/log',
   join: '/api/v1/laboratory/join',
   report: {
     get: '/api/v1/report',
+    getAll: '/api/v1/report/laboratory',
   },
 };

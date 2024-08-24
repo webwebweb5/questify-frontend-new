@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
@@ -73,6 +73,9 @@ export function HeaderBase({
 }) {
   const theme = useTheme();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const hideBackButton = pathname.includes('/submitted');
 
   return (
     <HeaderSection
@@ -107,7 +110,7 @@ export function HeaderBase({
             {/* -- Workspace popover -- */}
             {/* {workspaces && <WorkspacesPopover data-slot="workspaces" data={data?.workspaces} />} */}
 
-            {backBtn && (
+            {backBtn && !hideBackButton && (
               <Button
                 onClick={() => router.back()}
                 color="inherit"

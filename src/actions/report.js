@@ -10,7 +10,7 @@ export function useGetReportBySubmissionId(submissionId) {
 
   const memoizedValue = useMemo(
     () => ({
-      report: data || {},
+      report: data?.data || {},
       reportLoading: isLoading,
       reportError: error,
       reportValidating: isValidating,
@@ -21,54 +21,37 @@ export function useGetReportBySubmissionId(submissionId) {
   return memoizedValue;
 }
 
-export function useGetGivenScoreByQuestionId(questionId) {
-  // First, fetch the submission data using the questionId
-  const submissionURL = questionId ? [endpoints.submission.get, { params: { questionId } }] : '';
+export function useGetReportsByLaboratoryId(laboratoryId) {
+  const URL = laboratoryId ? [endpoints.report.getAll, { params: { laboratoryId } }] : '';
 
-  const {
-    data: submissionData,
-    isLoading: submissionLoading,
-    error: submissionError,
-    isValidating: submissionValidating,
-  } = useSWR(submissionURL, fetcher);
-
-  // Extract submissionId from the submission data
-  const submissionId = submissionData?.data?.submissionId; // Assuming you want the first submission if multiple are returned
-
-  // Then, fetch the report data using the submissionId
-  const reportURL = submissionId ? [endpoints.report.get, { params: { submissionId } }] : '';
-
-  const {
-    data: reportData,
-    isLoading: reportLoading,
-    error: reportError,
-    isValidating: reportValidating,
-  } = useSWR(reportURL, fetcher);
-
-  // Extract givenScore from the report data
-  const givenScore = reportData?.givenScore;
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 
   const memoizedValue = useMemo(
     () => ({
-      reportData,
-      givenScore,
-      submissionLoading,
-      submissionError,
-      submissionValidating,
-      reportLoading,
-      reportError,
-      reportValidating,
+      reports: data?.data || [],
+      reportsLoading: isLoading,
+      reportsError: error,
+      reportsValidating: isValidating,
     }),
-    [
-      reportData,
-      givenScore,
-      submissionLoading,
-      submissionError,
-      submissionValidating,
-      reportLoading,
-      reportError,
-      reportValidating,
-    ]
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+export function useGetReportByQuestionId(questionId) {
+  const URL = questionId ? [endpoints.report.get, { params: { questionId } }] : '';
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      report: data?.data || {},
+      reportLoading: isLoading,
+      reportError: error,
+      reportValidating: isValidating,
+    }),
+    [data, error, isLoading, isValidating]
   );
 
   return memoizedValue;

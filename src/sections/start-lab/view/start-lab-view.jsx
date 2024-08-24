@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation';
 
 import { Box, styled } from '@mui/material';
 
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import axiosInstance, { endpoints } from 'src/utils/axios';
 
 import { varAlpha } from 'src/theme/styles';
@@ -16,6 +18,7 @@ import { ResizablePanel, ResizableHandle, ResizablePanelGroup } from 'src/compon
 import LabEditor from '../lab-editor';
 import LabTestCase from '../lab-testcase';
 import LabProblemStatement from '../lab-problem-statement';
+import { LabConfirmSubmissionDialog } from '../lab-comfirm-submission-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +32,8 @@ const CustomResizablePanel = styled(ResizablePanel)(({ theme }) => ({
 
 export function StartLabView() {
   const params = useParams();
+
+  const submitDialog = useBoolean();
 
   const [comparedResults, setComparedResults] = useState([]);
 
@@ -82,51 +87,71 @@ export function StartLabView() {
   }, [submissions?.submissionId]);
 
   if (loading) return <Loading />;
-  if (error) return <Box>Something wrong</Box>;
+  if (error)
+    return (
+      <Box
+        typography="h4"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="50vh"
+      >
+        {error.message}
+      </Box>
+    );
 
   return (
-    <Box
-      sx={{
-        height: 'calc(100vh - 74px)',
-        p: 2,
-        py: 1,
-      }}
-    >
-      <ResizablePanelGroup direction="horizontal" className="gap-2">
-        <CustomResizablePanel
-          defaultSize={40}
-          collapsedSize={0}
-          collapsible
-          minSize={5}
-          className="bg-[#1B212A]"
-          // ref={panelRef}
-        >
-          <LabProblemStatement />
-        </CustomResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={60}>
-          <ResizablePanelGroup direction="vertical" className="gap-2">
-            <CustomResizablePanel defaultSize={60} className="bg-[#1B212A]">
-              <LabEditor
-                testCases={testCases}
-                setComparedResults={setComparedResults}
-                submissions={submissions}
-                setCurrentTab={setCurrentTab}
-              />
-            </CustomResizablePanel>
-            <ResizableHandle withHandle />
-            {/* 292A35 */}
-            <CustomResizablePanel defaultSize={40} className="bg-[#1c1d24] !overflow-auto">
-              <LabTestCase
-                testCases={testCases}
-                results={comparedResults}
-                currentTab={currentTab}
-                setCurrentTab={setCurrentTab}
-              />
-            </CustomResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </Box>
+    <>
+      <Box
+        sx={{
+          height: 'calc(100vh - 74px)',
+          p: 2,
+          py: 1,
+        }}
+      >
+        <ResizablePanelGroup direction="horizontal" className="gap-2">
+          <CustomResizablePanel
+            defaultSize={40}
+            collapsedSize={0}
+            collapsible
+            minSize={5}
+            className="bg-[#1B212A]"
+            // ref={panelRef}
+          >
+            <LabProblemStatement />
+          </CustomResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel defaultSize={60}>
+            <ResizablePanelGroup direction="vertical" className="gap-2">
+              <CustomResizablePanel defaultSize={60} className="bg-[#1B212A]">
+                <LabEditor
+                  testCases={testCases}
+                  setComparedResults={setComparedResults}
+                  submissions={submissions}
+                  setCurrentTab={setCurrentTab}
+                  submitDialog={submitDialog}
+                />
+              </CustomResizablePanel>
+              <ResizableHandle withHandle />
+              {/* 292A35 */}
+              <CustomResizablePanel defaultSize={40} className="bg-[#1c1d24] !overflow-auto">
+                <LabTestCase
+                  testCases={testCases}
+                  results={comparedResults}
+                  currentTab={currentTab}
+                  setCurrentTab={setCurrentTab}
+                />
+              </CustomResizablePanel>
+            </ResizablePanelGroup>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </Box>
+
+      <LabConfirmSubmissionDialog
+        open={submitDialog.value}
+        onClose={submitDialog.onFalse}
+        submissionId={submissions?.submissionId}
+      />
+    </>
   );
 }

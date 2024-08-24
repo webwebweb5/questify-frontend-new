@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import {
   Box,
   Stack,
@@ -16,12 +14,9 @@ import {
   TableContainer,
 } from '@mui/material';
 
-import { useBoolean } from 'src/hooks/use-boolean';
 import { useResponsive } from 'src/hooks/use-responsive';
-import { useCurrentRole } from 'src/hooks/use-current-role';
 
 import { Scrollbar } from 'src/components/scrollbar';
-import { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
@@ -35,18 +30,10 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function StudentGradeList({ students }) {
+export default function StudentGradeList({ reports }) {
   const mdUp = useResponsive('up', 'md');
 
-  const popover = usePopover();
-
-  const removeForm = useBoolean();
-
-  const role = useCurrentRole();
-
-  const [selectedStudentId, setSelectedStudentId] = useState('');
-
-  if (students?.length === 0) {
+  if (reports?.length === 0) {
     return <Box>Student not found</Box>;
   }
 
@@ -74,17 +61,20 @@ export default function StudentGradeList({ students }) {
           </TableHead>
 
           <TableBody>
-            {students &&
-              students?.map((user) => (
-                <TableRow key={user.studentId}>
+            {reports &&
+              reports?.map((report) => (
+                <TableRow key={report.submission.student.studentId}>
                   <TableCell>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                      <Avatar alt={user.firstName_EN} sx={{ width: 36, height: 36 }}>
-                        {user.firstName_EN.charAt(0)}
+                      <Avatar
+                        alt={report.submission.student.firstName_EN}
+                        sx={{ width: 36, height: 36 }}
+                      >
+                        {report.submission.student.firstName_EN.charAt(0)}
                       </Avatar>
                       <Box sx={{ display: 'flex', flexDirection: 'column', width: 'fit-content' }}>
                         <Typography sx={{ width: 'fit-content' }}>
-                          {user.displayName
+                          {report.submission.student.displayName
                             .toLowerCase()
                             .split(' ')
                             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -96,19 +86,21 @@ export default function StudentGradeList({ students }) {
                           color="text.disabled"
                           sx={{ mt: 0.5, width: 'fit-content' }}
                         >
-                          {user.studentId}
+                          {report.submission.student.studentId}
                         </Typography>
                       </Box>
                     </Stack>
                   </TableCell>
                   <TableCell>
-                    <Typography>Test</Typography>
+                    <Typography>{report?.question?.title}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography>Completed</Typography>
+                    <Typography>{report?.submitStatus}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography>-/100</Typography>
+                    <Typography>
+                      {report?.givenScore || '-'}/{report?.maxScore}
+                    </Typography>
                   </TableCell>
                   <TableCell align="right">
                     <Button variant="contained">See Report</Button>

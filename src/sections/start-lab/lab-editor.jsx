@@ -24,7 +24,13 @@ const ChangeLanguageSchema = zod.object({
 
 // ----------------------------------------------------------------------
 
-export default function LabEditor({ testCases, setComparedResults, submissions, setCurrentTab }) {
+export default function LabEditor({
+  testCases,
+  setComparedResults,
+  submissions,
+  setCurrentTab,
+  submitDialog,
+}) {
   const params = useParams();
 
   const editorRef = useRef(null);
@@ -92,16 +98,6 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
       const responses = await Promise.all(promises);
 
       const result = responses.map((response) => response?.data?.testCaseResults);
-
-      // const comparisonResults = newResults.map((output, index) => ({
-      //   testCaseId: testCases[index].testCaseId,
-      //   input: testCases[index].input,
-      //   expectedOutput: testCases[index].expectedOutput,
-      //   actualOutput: output,
-      //   isEqual: output === testCases[index].expectedOutput,
-      // }));
-
-      console.log(result[0]);
 
       setComparedResults(result[0]);
 
@@ -266,7 +262,9 @@ export default function LabEditor({ testCases, setComparedResults, submissions, 
         >
           Run
         </LoadingButton>
-        <Button variant="contained">Submit</Button>
+        <Button variant="contained" onClick={submitDialog.onTrue}>
+          Submit
+        </Button>
       </Stack>
     </Stack>
   );

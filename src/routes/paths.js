@@ -45,4 +45,5 @@ export const paths = {
     },
   },
   startLab: (id) => `${ROOTS.START_LAB}/${id}`,
+  submittedLab: (id) => `${ROOTS.START_LAB}/${id}/submitted`,
 };
