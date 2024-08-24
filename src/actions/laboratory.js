@@ -56,6 +56,27 @@ export function useGetLaboratoryById(laboratoryId) {
 
 // ----------------------------------------------------------------------
 
+export function useGetStudentByLaboratoryId(laboratoryId) {
+  const URL = laboratoryId ? [endpoints.laboratory.details, { params: { laboratoryId } }] : '';
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      students: data?.data?.students || [],
+      studentsLoading: isLoading,
+      studentsError: error,
+      studentsValidating: isValidating,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data?.data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
 export async function createLaboratory(laboratoryData) {
   const res = await axiosInstance.post(`${endpoints.laboratory.create}`, laboratoryData);
 

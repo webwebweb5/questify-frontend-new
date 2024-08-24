@@ -29,7 +29,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { fConvertSeconds } from 'src/utils/format-time';
 
-import Loading from 'src/app/loading';
+import Loading from 'src/app/(root)/loading';
 import { maxLine, varAlpha } from 'src/theme/styles';
 import { deleteQuestion, useGetALlTestCases } from 'src/actions/question';
 
