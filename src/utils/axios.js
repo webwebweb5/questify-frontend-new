@@ -80,5 +80,6 @@ export const endpoints = {
   report: {
     get: '/api/v1/report',
     getAll: '/api/v1/report/laboratory',
+    update: '/api/v1/report',
   },
 };

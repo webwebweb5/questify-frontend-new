@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { Stack, Typography } from '@mui/material';
 
 import { LabContent } from 'src/layouts/lab';
+import Loading from 'src/app/(root)/loading';
 import { useGetReportsByLaboratoryId } from 'src/actions/report';
 
 import { Label } from 'src/components/label';
@@ -16,9 +17,9 @@ import StudentGradeList from '../student-grade-list';
 export function LabGradeView() {
   const params = useParams();
 
-  // const { students } = useGetStudentByLaboratoryId(params.lid);
   const { reports, reportsLoading, reportsError } = useGetReportsByLaboratoryId(params.lid);
-  console.log(reports);
+
+  if (reportsLoading) return <Loading />;
 
   return (
     <LabContent maxWidth="xl">

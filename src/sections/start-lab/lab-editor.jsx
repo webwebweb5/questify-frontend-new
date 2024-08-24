@@ -91,11 +91,7 @@ export default function LabEditor({
     try {
       await updateSubmission(params.id, currentLanguage, code);
 
-      const promises = testCases.map((testCase) =>
-        updateAndExecuteSubmission(params.id, testCase.testCaseId, currentLanguage, code)
-      );
-
-      const responses = await Promise.all(promises);
+      const responses = await updateAndExecuteSubmission(params.id, currentLanguage, code);
 
       const result = responses.map((response) => response?.data?.testCaseResults);
 

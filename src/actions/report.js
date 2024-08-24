@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useMemo } from 'react';
 
-import { fetcher, endpoints } from 'src/utils/axios';
+import axiosInstance, { fetcher, endpoints } from 'src/utils/axios';
 
 export function useGetReportBySubmissionId(submissionId) {
   const URL = submissionId ? [endpoints.report.get, { params: { submissionId } }] : '';
@@ -42,7 +42,10 @@ export function useGetReportsByLaboratoryId(laboratoryId) {
 export function useGetReportByQuestionId(questionId) {
   const URL = questionId ? [endpoints.report.get, { params: { questionId } }] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   const memoizedValue = useMemo(
     () => ({
@@ -56,3 +59,11 @@ export function useGetReportByQuestionId(questionId) {
 
   return memoizedValue;
 }
+
+export const updateReport = async (submissionId, score) => {
+  const res = await axiosInstance.put(
+    `${endpoints.report.update}?submissionId=${submissionId}`,
+    score
+  );
+  return res.data;
+};

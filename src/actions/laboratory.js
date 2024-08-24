@@ -37,7 +37,10 @@ export function useGetLaboratories() {
 export function useGetLaboratoryById(laboratoryId) {
   const URL = laboratoryId ? [endpoints.laboratory.details, { params: { laboratoryId } }] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   const memoizedValue = useMemo(
     () => ({

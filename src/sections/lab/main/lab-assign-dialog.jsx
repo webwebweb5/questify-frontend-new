@@ -25,7 +25,7 @@ export function LabAssignDialog({ open, onClose, laboratoryId }) {
       toast.success(`${response.message}`);
     } catch (error) {
       console.error(error);
-      toast.success(`${error.message}`);
+      toast.error(`${error.message}`);
     } finally {
       loading.onFalse();
       onClose();

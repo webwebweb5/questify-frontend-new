@@ -5,6 +5,8 @@ import { paths } from 'src/routes/paths';
 import { fConvertSeconds } from 'src/utils/format-time';
 
 import { maxLine } from 'src/theme/styles';
+import Loading from 'src/app/(root)/loading';
+import { useGetReportByQuestionId } from 'src/actions/report';
 
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
@@ -13,13 +15,16 @@ import { EmptyContent } from 'src/components/empty-content';
 // ----------------------------------------------------------------------
 
 export function LabMainStudent({ labQuestion, labInfo, questionEmpty }) {
+  if (!labQuestion) {
+    return <EmptyContent filled title="Laboratory not assigned" sx={{ my: 3, py: 4 }} />;
+  }
+
   const { title, durationTime, maxScore } = labInfo;
   const { questionId, title: QuestionTitle, problemStatement } = labQuestion;
-  // const { givenScore, submissionLoading, submissionError, reportLoading, reportError } =
-  //   useGetReportByQuestionId(questionId);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { report, reportLoading, reportError } = useGetReportByQuestionId(questionId);
 
-  // if (submissionLoading || reportLoading) return <Loading />;
-  // if (submissionError || reportError) return <div>Error occurred</div>;
+  if (reportLoading) return <Loading />;
 
   if (!labInfo) {
     return <EmptyContent filled title="Laboratory not found" sx={{ my: 3, py: 4 }} />;
@@ -37,7 +42,10 @@ export function LabMainStudent({ labQuestion, labInfo, questionEmpty }) {
         <Stack>
           <Typography variant="subtitle1">Points</Typography>
           <Typography variant="body1" sx={{ ...maxLine({ line: 1 }), color: 'text.secondary' }}>
-            0/{maxScore}
+            {report?.givenScore !== null && reportError?.status !== 'NOT_FOUND'
+              ? report?.givenScore
+              : '-'}
+            /{maxScore}
           </Typography>
         </Stack>
       </Stack>
@@ -58,6 +66,7 @@ export function LabMainStudent({ labQuestion, labInfo, questionEmpty }) {
             sx={{ py: 1.5, mr: 2, mt: 3, width: 'fit-content' }}
             href={paths.startLab(questionId)}
             startIcon={<Iconify icon="carbon:play-filled-alt" />}
+            disabled={report?.submission?.status === 'INACTIVE'}
           >
             Start Lab
           </Button>

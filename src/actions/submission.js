@@ -72,7 +72,7 @@ export function useGetSubmissionsAndTestCases(questionId) {
 
 // ----------------------------------------------------------------------
 
-export const updateAndExecuteSubmission = async (questionId, testCaseId, language, code) => {
+export const updateAndExecuteSubmission = async (questionId, language, code) => {
   // update
   await axiosInstance.put(
     `/api/v1/submission?questionId=${questionId}&language=${language}&submissionStatus=ACTIVE`,
@@ -86,7 +86,7 @@ export const updateAndExecuteSubmission = async (questionId, testCaseId, languag
 
   // execute
   const res = await axiosInstance.post(
-    `/api/v1/submission/execute?language=${language}&questionId=${questionId}&testCaseId=${testCaseId}`
+    `/api/v1/submission/execute?language=${language}&questionId=${questionId}`
   );
   return res.data;
 };

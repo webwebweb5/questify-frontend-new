@@ -14,6 +14,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useCurrentRole } from 'src/hooks/use-current-role';
 
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
@@ -42,6 +43,8 @@ export function LabItem({ lab }) {
   const router = useRouter();
 
   const deleteForm = useBoolean();
+
+  const role = useCurrentRole();
 
   const { laboratoryId, title, description, professor, status, studentQuantity } = lab;
 
@@ -123,9 +126,11 @@ export function LabItem({ lab }) {
       spacing={1.5}
       sx={{ position: 'relative', p: (theme) => theme.spacing(0, 2.5, 2.5, 2.5) }}
     >
-      <IconButton onClick={popover.onOpen} sx={{ position: 'absolute', bottom: 20, right: 8 }}>
-        <Iconify icon="eva:more-vertical-fill" />
-      </IconButton>
+      {role === 'ProfAcc' && (
+        <IconButton onClick={popover.onOpen} sx={{ position: 'absolute', bottom: 20, right: 8 }}>
+          <Iconify icon="eva:more-vertical-fill" />
+        </IconButton>
+      )}
 
       {[
         {
