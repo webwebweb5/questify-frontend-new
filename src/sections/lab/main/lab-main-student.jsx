@@ -5,6 +5,7 @@ import { paths } from 'src/routes/paths';
 import { fConvertSeconds } from 'src/utils/format-time';
 
 import { maxLine } from 'src/theme/styles';
+import Loading from 'src/app/(root)/loading';
 import { useGetGivenScoreByQuestionId } from 'src/actions/report';
 
 import { Iconify } from 'src/components/iconify';
@@ -16,7 +17,11 @@ import { EmptyContent } from 'src/components/empty-content';
 export function LabMainStudent({ labQuestion, labInfo, questionEmpty }) {
   const { title, durationTime, maxScore } = labInfo;
   const { questionId, title: QuestionTitle, problemStatement } = labQuestion;
-  const { givenScore } = useGetGivenScoreByQuestionId(questionId);
+  const { givenScore, submissionLoading, submissionError, reportLoading, reportError } =
+    useGetGivenScoreByQuestionId(questionId);
+
+  if (submissionLoading || reportLoading) return <Loading />;
+  if (submissionError || reportError) return <div>Error occurred</div>;
 
   if (!labInfo) {
     return <EmptyContent filled title="Laboratory not found" sx={{ my: 3, py: 4 }} />;
