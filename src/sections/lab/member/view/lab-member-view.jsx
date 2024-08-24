@@ -156,7 +156,7 @@ export function LabMemberView() {
         <Stack direction="row" justifyContent="space-between">
           <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
             <Typography variant="h4">Students</Typography>
-            <Label>1</Label>
+            <Label>{laboratory?.students.length}</Label>
           </Stack>
         </Stack>
 

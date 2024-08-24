@@ -1,3 +1,5 @@
+import { useRouter } from 'next/navigation';
+
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
@@ -70,6 +72,7 @@ export function HeaderBase({
   ...other
 }) {
   const theme = useTheme();
+  const router = useRouter();
 
   return (
     <HeaderSection
@@ -83,7 +86,7 @@ export function HeaderBase({
             {slots?.leftAreaStart}
 
             {/* -- Menu button -- */}
-            {menuButton && (
+            {menuButton && !backBtn && (
               <MenuButton
                 data-slot="menu-button"
                 onClick={onOpenNav}
@@ -105,7 +108,11 @@ export function HeaderBase({
             {/* {workspaces && <WorkspacesPopover data-slot="workspaces" data={data?.workspaces} />} */}
 
             {backBtn && (
-              <Button color="inherit" startIcon={<Iconify icon="carbon:arrow-left" />}>
+              <Button
+                onClick={() => router.back()}
+                color="inherit"
+                startIcon={<Iconify icon="carbon:arrow-left" />}
+              >
                 Back
               </Button>
             )}

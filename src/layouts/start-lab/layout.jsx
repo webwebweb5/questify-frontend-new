@@ -52,7 +52,7 @@ export function StartLabLayout({ sx, children, data }) {
         <HeaderBase
           layoutQuery={layoutQuery}
           disableElevation={isNavVertical}
-          onOpenNav={mobileNavOpen.onTrue}
+          // onOpenNav={mobileNavOpen.onTrue}
           data={{
             nav: navData,
             langs: [
