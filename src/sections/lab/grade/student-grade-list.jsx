@@ -48,7 +48,7 @@ export default function StudentGradeList({ reports }) {
   };
 
   if (reports?.length === 0) {
-    return <Box>Student not found</Box>;
+    return <Box>No reports available. Students have not started the lab yet</Box>;
   }
 
   return (

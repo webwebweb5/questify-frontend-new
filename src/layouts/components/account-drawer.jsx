@@ -13,6 +13,8 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { useRouter, usePathname } from 'src/routes/hooks';
 
+import { useCurrentRole } from 'src/hooks/use-current-role';
+
 import { varAlpha } from 'src/theme/styles';
 
 import { Label } from 'src/components/label';
@@ -36,6 +38,8 @@ export function AccountDrawer({ data = [], sx, ...other }) {
   const router = useRouter();
 
   const pathname = usePathname();
+
+  const role = useCurrentRole();
 
   const [open, setOpen] = useState(false);
 
@@ -115,6 +119,20 @@ export function AccountDrawer({ data = [], sx, ...other }) {
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
               {user?.email}
             </Typography>
+
+            <Typography variant="caption" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
+              ID: {user?.userId}
+            </Typography>
+
+            {role === 'StdAcc' ? (
+              <Label color="info" sx={{ mt: 1 }}>
+                Student
+              </Label>
+            ) : (
+              <Label color="secondary" sx={{ mt: 1 }}>
+                Professor
+              </Label>
+            )}
           </Stack>
 
           <Stack

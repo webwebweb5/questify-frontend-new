@@ -11,7 +11,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { CONFIG } from 'src/config-global';
 
-import { SocialIcon } from 'src/components/iconify';
 import { AnimateLogo2 } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
@@ -100,16 +99,46 @@ export function SignInView() {
 
       <Stack direction="row" justifyContent="center" spacing={1}>
         <IconButton>
-          <SocialIcon icon="google" width={22} />
+          <Box
+            alt="profile pattathai"
+            component="img"
+            src={`${CONFIG.site.basePath}/assets/icons/profile/pattathai_ic.svg`}
+            width={32}
+            height={32}
+          />
         </IconButton>
 
         <IconButton>
+          <Box
+            alt="profile web"
+            component="img"
+            src={`${CONFIG.site.basePath}/assets/icons/profile/web_ic.svg`}
+            width={32}
+            height={32}
+          />
+        </IconButton>
+
+        <IconButton>
+          <Box
+            alt="profile vee"
+            component="img"
+            src={`${CONFIG.site.basePath}/assets/icons/profile/vee_ic.svg`}
+            width={32}
+            height={32}
+          />
+        </IconButton>
+
+        {/* <IconButton>
+          <SocialIcon icon="google" width={22} />
+        </IconButton> */}
+
+        {/* <IconButton>
           <SocialIcon icon="github" width={22} />
         </IconButton>
 
         <IconButton>
           <SocialIcon icon="twitter" width={22} />
-        </IconButton>
+        </IconButton> */}
       </Stack>
     </>
   );
