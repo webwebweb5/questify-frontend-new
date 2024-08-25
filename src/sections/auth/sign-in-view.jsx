@@ -94,7 +94,7 @@ export function SignInView() {
           '&::before, :after': { borderTopStyle: 'dashed' },
         }}
       >
-        OR
+        PRESENTED BY
       </Divider>
 
       <Stack direction="row" justifyContent="center" spacing={1}>
