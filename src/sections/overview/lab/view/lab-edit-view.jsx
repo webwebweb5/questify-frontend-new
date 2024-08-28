@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
 import { paths } from 'src/routes/paths';
@@ -23,9 +22,9 @@ export function LabEditView() {
     params.lid
   );
 
-  useEffect(() => {
-    mutateLaboratory();
-  }, [mutateLaboratory]);
+  // useEffect(() => {
+  //   mutateLaboratory();
+  // }, [mutateLaboratory]);
 
   if (laboratoryLoading) return <Loading />;
   if (laboratoryError) return router.push('/');

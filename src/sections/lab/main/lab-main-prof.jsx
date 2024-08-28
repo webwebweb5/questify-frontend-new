@@ -50,7 +50,7 @@ export function LabMainProf({ labQuestions, labInfo }) {
       <Divider sx={{ borderStyle: 'dashed', mt: 3 }} />
 
       {labQuestions?.length === 0 ? (
-        <EmptyContent filled title="Laboratory not found" sx={{ my: 3, py: 4 }} />
+        <EmptyContent filled title="Question not found" sx={{ my: 3, py: 4 }} />
       ) : (
         <Box
           gap={3}

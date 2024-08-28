@@ -35,7 +35,7 @@ export function LabMainStudent({ labQuestion, labInfo, questionEmpty }) {
     <>
       <Stack direction="row" justifyContent="space-between">
         <Stack>
-          <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
+          <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="h4"> {title} </Typography>
             {report?.submission?.status === 'INACTIVE' && <Label color="primary">Submitted</Label>}
           </Stack>
@@ -60,7 +60,7 @@ export function LabMainStudent({ labQuestion, labInfo, questionEmpty }) {
         <EmptyContent filled title="Laboratory not assigned yet!" sx={{ my: 3, py: 4 }} />
       ) : (
         <Stack spacing={2} sx={{ mt: 4 }}>
-          <Typography variant="h4" noWrap>
+          <Typography variant="h4" sx={{ width: 'fit-content' }}>
             {QuestionTitle}
           </Typography>
           <Markdown children={problemStatement} />
@@ -74,6 +74,9 @@ export function LabMainStudent({ labQuestion, labInfo, questionEmpty }) {
           >
             Start Lab
           </Button>
+          {/* <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+            {questionId}
+          </Typography> */}
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
             {report?.submission?.status === 'INACTIVE' &&
               '(You have already submitted this laboratory)'}

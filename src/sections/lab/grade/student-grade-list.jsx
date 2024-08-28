@@ -116,7 +116,19 @@ export default function StudentGradeList({ reports }) {
                       <Typography>{report?.question?.title}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography>{report?.submitStatus}</Typography>
+                      <Typography
+                        color={
+                          report?.submitStatus === 'IN_PROGRESS'
+                            ? 'info'
+                            : report?.submitStatus === 'ON_TIME'
+                              ? 'primary'
+                              : report?.submitStatus === 'LATE'
+                                ? 'error'
+                                : 'default'
+                        }
+                      >
+                        {report?.submitStatus}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography>

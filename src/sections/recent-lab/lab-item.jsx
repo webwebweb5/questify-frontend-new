@@ -202,7 +202,12 @@ export function LabItem({ lab }) {
         </MenuList>
       </CustomPopover>
 
-      <LabDeleteForm open={deleteForm.value} onClose={deleteForm.onFalse} labId={laboratoryId} />
+      <LabDeleteForm
+        open={deleteForm.value}
+        onClose={deleteForm.onFalse}
+        labId={laboratoryId}
+        labTitle={title}
+      />
     </>
   );
 }

@@ -91,14 +91,11 @@ export default function LabEditor({
     try {
       await updateSubmission(params.id, currentLanguage, code);
 
-      const responses = await updateAndExecuteSubmission(params.id, currentLanguage, code);
+      const response = await updateAndExecuteSubmission(params.id, currentLanguage, code);
 
-      const result = responses.map((response) => response?.data?.testCaseResults);
+      setComparedResults(response.data.testCaseResults);
 
-      setComparedResults(result[0]);
-
-      const alert = responses[0]?.message || 'Execution completed';
-      toast.success(`${alert}`);
+      toast.success(`${response.message}`);
       setCurrentTab('two');
     } catch (error) {
       console.error(error);

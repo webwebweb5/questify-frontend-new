@@ -22,7 +22,7 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export function LabDeleteForm({ open, onClose, labId }) {
+export function LabDeleteForm({ open, onClose, labId, labTitle }) {
   const loading = useBoolean(false);
 
   const router = useRouter();
@@ -34,7 +34,7 @@ export function LabDeleteForm({ open, onClose, labId }) {
       toast.success(`${response.message}`);
       mutate(endpoints.laboratory.list);
       onClose();
-      router.push(paths.dashboard.root);
+      router.push(paths.recentLab.root);
     } catch (error) {
       console.error(error);
     }
@@ -47,7 +47,7 @@ export function LabDeleteForm({ open, onClose, labId }) {
 
       <DialogContent dividers style={{ position: 'relative' }}>
         <DialogContentText id="alert-dialog-description">
-          Confirm to Delete Laboratory: {labId}
+          Confirm to Delete Laboratory: {labTitle}
         </DialogContentText>
       </DialogContent>
 

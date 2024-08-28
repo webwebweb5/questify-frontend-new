@@ -73,7 +73,7 @@ export function JoinLabDialog({ open, onClose, labId }) {
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
       <Form methods={methods} onSubmit={onSubmit}>
-        <DialogTitle id="crop-dialog-title">Join Classroom</DialogTitle>
+        <DialogTitle id="crop-dialog-title">Join Laboratory</DialogTitle>
         <DialogContent dividers style={{ position: 'relative' }}>
           <Stack spacing={1.5}>
             <Typography variant="subtitle2">Invitation Code</Typography>

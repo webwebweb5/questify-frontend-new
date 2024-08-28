@@ -27,8 +27,6 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fConvertSeconds } from 'src/utils/format-time';
-
 import Loading from 'src/app/(root)/loading';
 import { maxLine, varAlpha } from 'src/theme/styles';
 import { deleteQuestion, useGetALlTestCases } from 'src/actions/question';
@@ -223,7 +221,7 @@ export function LabQuestionItem({ question, index }) {
               }}
             />
 
-            <Stack
+            {/* <Stack
               spacing={1}
               direction="row"
               sx={{ color: 'primary.main', typography: 'caption' }}
@@ -232,7 +230,7 @@ export function LabQuestionItem({ question, index }) {
               <Typography variant="caption">
                 Duration {fConvertSeconds(laboratory?.durationTime)}
               </Typography>
-            </Stack>
+            </Stack> */}
 
             <Stack
               spacing={1}
