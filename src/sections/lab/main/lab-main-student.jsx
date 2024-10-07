@@ -74,9 +74,9 @@ export function LabMainStudent({ labQuestion, labInfo, questionEmpty }) {
           >
             Start Lab
           </Button>
-          {/* <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+          <Typography variant="caption" sx={{ color: 'text.disabled' }}>
             {questionId}
-          </Typography> */}
+          </Typography>
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
             {report?.submission?.status === 'INACTIVE' &&
               '(You have already submitted this laboratory)'}

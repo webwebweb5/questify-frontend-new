@@ -115,17 +115,8 @@ export function LabQuestionItem({ question, index }) {
         <Button
           onClick={() => setQuestionInfoPopupOpen(false)}
           startIcon={<Iconify icon="eva:close-outline" />}
-          sx={{ mr: 2 }}
         >
           Close
-        </Button>
-        <Button
-          color="primary"
-          variant="contained"
-          startIcon={<Iconify icon="carbon:play-filled-alt" />}
-          href={paths.startLab(questionId)}
-        >
-          Test Lab
         </Button>
       </DialogActions>
     </Dialog>
@@ -167,7 +158,7 @@ export function LabQuestionItem({ question, index }) {
 
   return (
     <>
-      <Card sx={{ position: 'relative', overflow: 'visible' }}>
+      <Card sx={{ position: 'relative', overflow: 'visible', py: 2 }}>
         <IconButton sx={{ position: 'absolute', top: 8, right: 8 }} onClick={popover.onOpen}>
           <Iconify icon="eva:more-vertical-fill" />
         </IconButton>
@@ -221,17 +212,6 @@ export function LabQuestionItem({ question, index }) {
               }}
             />
 
-            {/* <Stack
-              spacing={1}
-              direction="row"
-              sx={{ color: 'primary.main', typography: 'caption' }}
-            >
-              <Iconify width={16} icon="mdi:access-time" />
-              <Typography variant="caption">
-                Duration {fConvertSeconds(laboratory?.durationTime)}
-              </Typography>
-            </Stack> */}
-
             <Stack
               spacing={1}
               direction="row"
@@ -257,14 +237,13 @@ export function LabQuestionItem({ question, index }) {
             </Stack>
           </Stack>
 
-          <Box>
+          {/* <Box>
             <Divider sx={{ borderStyle: 'dashed' }} />
 
             <Box
               rowGap={1}
               columnGap={1}
               display="grid"
-              // gridTemplateColumns={`${role !== 'ProfAcc' && 'repeat(2, 1fr)'}`}
               sx={{ p: 3 }}
             >
               <Button
@@ -276,7 +255,7 @@ export function LabQuestionItem({ question, index }) {
                 See Submissions
               </Button>
             </Box>
-          </Box>
+          </Box> */}
         </Stack>
       </Card>
 

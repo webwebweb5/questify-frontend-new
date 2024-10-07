@@ -17,7 +17,6 @@ import { SettingsButton } from '../components/settings-button';
 // import { ContactsPopover } from '../components/contacts-popover';
 
 // import { WorkspacesPopover } from '../components/workspaces-popover';
-import { NotificationsDrawer } from '../components/notifications-drawer';
 
 // ----------------------------------------------------------------------
 
@@ -135,20 +134,6 @@ export function HeaderBase({
                 gap: { xs: 1, sm: 1.5 },
               }}
             >
-              {/* -- Searchbar -- */}
-              {/* {searchbar && <Searchbar data-slot="searchbar" data={data?.nav} />} */}
-
-              {/* -- Language popover -- */}
-              {/* {localization && <LanguagePopover data-slot="localization" data={data?.langs} />} */}
-
-              {/* -- Notifications popover -- */}
-              {notifications && (
-                <NotificationsDrawer data-slot="notifications" data={data?.notifications} />
-              )}
-
-              {/* -- Contacts popover -- */}
-              {/* {contacts && <ContactsPopover data-slot="contacts" data={data?.contacts} />} */}
-
               {/* -- Settings button -- */}
               {settings && <SettingsButton data-slot="settings" />}
 

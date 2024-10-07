@@ -24,7 +24,7 @@ export function LabMainProf({ labQuestions, labInfo }) {
 
   const assignDialog = useBoolean();
 
-  const { laboratoryId, title, durationTime } = labInfo;
+  const { laboratoryId, title, durationTime, students } = labInfo;
 
   return (
     <>
@@ -41,9 +41,9 @@ export function LabMainProf({ labQuestions, labInfo }) {
           sx={{ height: 'fit-content', px: 2, py: 1 }}
           startIcon={<Iconify icon="ic:outline-auto-awesome" />}
           onClick={assignDialog.onTrue}
-          disabled={!labQuestions}
+          disabled={labQuestions?.length === 0 || students?.length === 0}
         >
-          Random Assign
+          Assign
         </Button>
       </Stack>
 
@@ -72,7 +72,7 @@ export function LabMainProf({ labQuestions, labInfo }) {
       <Button
         component={RouterLink}
         variant="contained"
-        sx={{ py: 1.5, mb: 3 }}
+        sx={{ py: 1.5, mb: 3, width: 'fit-content' }}
         href={paths.lab.question.new(params.lid)}
         startIcon={<Iconify icon="mingcute:add-line" />}
         color="info"

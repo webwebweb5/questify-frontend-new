@@ -16,6 +16,8 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useCurrentRole } from 'src/hooks/use-current-role';
 
+import { maxLine } from 'src/theme/styles';
+
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
@@ -108,15 +110,17 @@ export function LabItem({ lab }) {
           {title}
         </Link>
       }
-      secondary={description}
+      secondary={
+        <Typography
+          component="span"
+          variant="caption"
+          sx={{ color: 'text.disabled', ...maxLine({ line: 1 }), mt: 1 }}
+        >
+          {description}
+        </Typography>
+      }
       primaryTypographyProps={{
         typography: 'subtitle1',
-      }}
-      secondaryTypographyProps={{
-        mt: 1,
-        component: 'span',
-        typography: 'caption',
-        color: 'text.disabled',
       }}
     />
   );

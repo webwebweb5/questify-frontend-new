@@ -1,6 +1,6 @@
+import dayjs from 'dayjs';
 import { mutate } from 'swr';
 import { z as zod } from 'zod';
-import dayjs, { duration } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,7 +23,7 @@ import { createLaboratory } from 'src/actions/laboratory';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 
-dayjs.extend(duration);
+// dayjs.extend(duration);
 
 // ----------------------------------------------------------------------
 
