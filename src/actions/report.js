@@ -67,3 +67,11 @@ export const updateReport = async (submissionId, score) => {
   );
   return res.data;
 };
+
+export async function exportReport(laboratoryId) {
+  const res = await axiosInstance.get(`${endpoints.export}?laboratoryId=${laboratoryId}`, {
+    responseType: 'blob',
+  });
+
+  return res.data;
+}

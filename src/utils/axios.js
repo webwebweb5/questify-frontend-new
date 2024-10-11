@@ -82,4 +82,5 @@ export const endpoints = {
     getAll: '/api/v1/report/laboratory',
     update: '/api/v1/report',
   },
+  export: '/api/v1/export',
 };

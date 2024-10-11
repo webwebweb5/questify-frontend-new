@@ -1,6 +1,6 @@
 'use client';
 
-// import { useEffect } from 'react';
+import FileSaver from 'file-saver';
 import { useParams } from 'next/navigation';
 
 import { LoadingButton } from '@mui/lab';
@@ -19,10 +19,10 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { LabContent } from 'src/layouts/lab';
 import Loading from 'src/app/(root)/loading';
-import { useGetReportsByLaboratoryId } from 'src/actions/report';
+import { exportReport, useGetReportsByLaboratoryId } from 'src/actions/report';
 
 import { Label } from 'src/components/label';
-// import { toast } from 'src/components/snackbar';
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 
 import StudentGradeList from '../student-grade-list';
@@ -33,10 +33,28 @@ export function LabGradeView() {
   const params = useParams();
 
   const excelDialog = useBoolean();
+  const loading = useBoolean(false);
 
-  // useEffect(() => {
-  //   toast.success(`Export to Excel Successfully`);
-  // }, []);
+  const handleExportReport = async () => {
+    loading.onTrue();
+    try {
+      const response = await exportReport(params.lid);
+
+      const blob = new Blob([response], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+      });
+
+      FileSaver.saveAs(blob, `report_lab_${params.lid}.xlsx`);
+
+      toast.success('Export Laboratory report successfully.');
+    } catch (error) {
+      console.error(error);
+      toast.error('Export failed. Please try again later.');
+    } finally {
+      loading.onFalse();
+      excelDialog.onFalse();
+    }
+  };
 
   const { reports, reportsLoading, reportsError } = useGetReportsByLaboratoryId(params.lid);
 
@@ -85,8 +103,8 @@ export function LabGradeView() {
             color="primary"
             variant="contained"
             startIcon={<Iconify icon="ph:microsoft-excel-logo-fill" />}
-            // onClick={handleAssignLab}
-            // loading={loading.value}
+            onClick={handleExportReport}
+            loading={loading.value}
           >
             Export
           </LoadingButton>

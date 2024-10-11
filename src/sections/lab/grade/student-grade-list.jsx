@@ -26,8 +26,8 @@ import { StudentReportDialog } from './student-report-dialog';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', minWidth: 180, width: { xs: 300, lg: 450 } },
-  { id: 'question', label: 'Question' },
+  { id: 'name', label: 'Name', minWidth: 180, width: { xs: 250, lg: 300 } },
+  { id: 'question', label: 'Question', minWidth: 180 },
   { id: 'status', label: 'Status' },
   { id: 'score', label: 'Score' },
   { id: 'actions', label: '', align: 'right' },
